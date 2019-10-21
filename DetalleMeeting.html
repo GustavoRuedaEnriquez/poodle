@@ -131,31 +131,27 @@
                     <div class="well well-sm">
                         <form class="form-horizontal" method="post">
                             <fieldset>
-                                <legend class="text-center header">CREAR MEETING</legend>
+                                <legend class="text-center header">DETALLES DE LA MEETING</legend>
 
                                 <div class="form-group" style="margin-top: 20px">
                                     <label for="full_name_id" class="control-label">Nombre de Meeting</label>
                                     <div class="col-md-8">
-                                        <input id="fname" name="name" type="text" placeholder="Nombre de Meeting"
-                                            class="form-control">
+                                        <label>Junta Kali</label>
                                     </div>
                                 </div>
 
                                 <div class="row" style="margin-top: 20px">
                                     <div class="col-md-5 form-group ">
-                                        <label class="control-label">Fecha de Meeting</label>
+                                        <label for="full_name_id" class="control-label">Fecha de Meeting</label>
                                         <div class="col-md-10" style="padding:10px">
-                                            <input id="datepicker" width="276" />
+                                            <input id="datepicker" width="276" value="10/10/2019" disabled=true/>
                                         </div>
                                     </div>
                                     <div class="col-md-5 form-group">
                                         <label for="full_name_id" class="control-label">Horario de Meeting</label>
                                         <div class="col-md-10" style="padding:10px">
-                                            <input id="timepicker" width="276" />
+                                            <input id="timepicker" width="276" value="14:56" disabled=true/>
                                         </div>
-                                    </div>
-                                    <div class="col-md-1" style="align-self: center; text-align: center;">
-                                        <i class="far fa-calendar-plus fa-2x" style="color:blue"></i>
                                     </div>
                                 </div>
                                 <div style="margin-top: 10px">
@@ -170,29 +166,18 @@
                                 </div>
                                 <div class="form-group" style="margin-top: 20px">
                                     <label for="full_name_id" class="control-label">Importancia</label>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <select class="form-control" >
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
-                                        </div>
+                                    <div class="col-md-8">
+                                        <label>3</label>
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin-top: 20px">
-                                    <label for="full_name_id" class="control-label">Agregar Participantes</label>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <input id="email" name="email" type="text" placeholder="Email Address"
-                                                class="form-control" style="float:right">
-                                        </div>
-                                        <div class="col-md-1" style="align-self: center;">
-                                            <i class="fas fa-plus-circle fa-2x" style="color:blue"></i>
-                                        </div>
+                                    <label for="full_name_id" class="control-label">Organizador</label>
+                                    <div class="col-md-8">
+                                        <label>sbriones97@hotmail.com</label>
                                     </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px">
+                                    <label for="full_name_id" class="control-label">Participantes</label>
                                     <div style="margin-top: 10px">
                                         <div class="col-md-8">
                                             <i class="fa fa-user bigicon"></i>
@@ -208,13 +193,10 @@
                                 <div class="form-group">
                                     <label for="full_name_id" class="control-label">Descripción</label>
                                     <div class="col-md-8">
-                                        <textarea class="form-control" id="description" name="description"
-                                            placeholder="Agrega una descripción" rows="7"></textarea>
+                                        <p>
+                                            Esta junta se realiza para hablar sobre los siguientes detalles del proyecto.
+                                        </p>
                                     </div>
-                                </div>
-
-                                <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
                                 </div>
                             </fieldset>
                         </form>
