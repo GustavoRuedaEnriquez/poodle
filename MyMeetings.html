@@ -35,7 +35,6 @@
             color: #566787;
             background: #f5f5f5;
             font-family: 'Work Sans', Arial, sans-serif;
-            ;
             font-size: 13px;
         }
         
@@ -92,7 +91,7 @@
     <!--Navigation bar-->
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Poodle</a>
+            <a class="navbar-brand" href="calendario.html">Poodle</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                 aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
@@ -100,9 +99,12 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="#" class="nav-link">Dashboard</a></li>
+                    <li class="nav-item active"><a href="admin-activity.html" class="nav-link">Dashboard</a></li>
+                    <li class="nav-item cta"><a href="admin-view-users.html" class="nav-link">Administrar Usuarios</a></li>
                     <li class="nav-item cta"><a href="CreateMeeting.html" class="nav-link"><span>Crear</span></a></li>
-                    <li class="nav-item cta"><a href="#" class="nav-link"><span>Mi perfil</span></a></li>
+                    <li class="nav-item cta"><a href="dashboard-participant.html" class="nav-link"><span>Meetings</span></a></li>
+                    <li class="nav-item cta"><a href="MyMeetings.html" class="nav-link"><span>Mis Meetings</span></a></li>
+                    <li class="nav-item cta"><a href="user.html" class="nav-link"><span>Mi perfil</span></a></li>
                     <li class="nav-item cta dropdown">
                         <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
@@ -186,8 +188,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Nombre de Meeting</th>
                             <th scope="col">Fecha</th>
-                            <th scope="col">Hota</th>
-                            <th scope="col">Organizador</th>
+                            <th scope="col">Hora</th>
                             <th scope="col">Importancia</th>
                         </tr>
                     </thead>
@@ -197,7 +198,6 @@
                             <td>Junta de Kali</td>
                             <td>10/10/2019</td>
                             <td>14:56</td>
-                            <td>sbriones97@hotmail.com</td>
                             <td>3</td>
                         </tr>
                         <tr onclick="clickRow()">
@@ -205,7 +205,6 @@
                             <td>Presentación</td>
                             <td>17/10/2019</td>
                             <td>10:00</td>
-                            <td>sbriones97@hotmail.com</td>
                             <td>1</td>
                         </tr>
                         <tr onclick="clickRow()">
@@ -213,7 +212,6 @@
                             <td>Proyecto z</td>
                             <td>12/11/2019</td>
                             <td>16:00</td>
-                            <td>gusgus@hotmail.com</td>
                             <td>4</td>
                         </tr>
                         <tr onclick="clickRow()">
@@ -221,7 +219,6 @@
                             <td>Proyecto w</td>
                             <td>6/2/2020</td>
                             <td>20:00</td>
-                            <td>gusgus@hotmail.com</td>
                             <td>3</td>
                         </tr>
                         <tr onclick="clickRow()">
@@ -229,7 +226,6 @@
                             <td>Proyecto y</td>
                             <td>1/5/2020</td>
                             <td>15:00</td>
-                            <td>sbriones97@hotmail.com</td>
                             <td>3</td>
                         </tr>
                     </tbody>
