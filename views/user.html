@@ -35,6 +35,12 @@
 
     <style>
        
+       body {
+            color: #566787;
+            background: #f5f5f5;
+            font-family: 'Work Sans', Arial, sans-serif;
+            font-size: 13px;
+        }
         #register-container {
             margin: auto;
             margin-top: 2%;
@@ -75,17 +81,89 @@
             width: 250px;
         }
 
-      
-
-        
+        #edit{
+            color: white;
+        }
+              
     </style>
 </head>
 
 <body>
     <!--Navigation bar-->
-    <nav class="navbar-expand-lg navbar-dark ftco_navbar bg-dark" id="ftco-navbar">
-        <div class="container navbar-users">
-            <a class="navbar-brand" href="index.html" >Poodle</a>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="calendario.html">Poodle</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="admin-activity.html" class="nav-link">Dashboard</a></li>
+                    <li class="nav-item cta"><a href="admin-view-users.html" class="nav-link">Administrar Usuarios</a></li>
+                    <li class="nav-item cta"><a href="CreateMeeting.html" class="nav-link"><span>Crear</span></a></li>
+                    <li class="nav-item cta"><a href="dashboard-participant.html" class="nav-link"><span>Meetings</span></a></li>
+                    <li class="nav-item cta"><a href="MyMeetings.html" class="nav-link"><span>Mis Meetings</span></a></li>
+                    <li class="nav-item cta"><a href="user.html" class="nav-link"><span>Mi perfil</span></a></li>
+                    <li class="nav-item cta dropdown">
+                        <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <span>Feedback</span>
+                        </a>
+                        <div class="dropdown-menu  dropdown-menu-right"
+                            style="width:400px;height: auto;max-height: 400px;overflow-x: hidden;padding:0px;"
+                            aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-list-alt"></i>
+                                Revisa tus meeting de hoy!
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-hourglass"></i>
+                                Cambió la hora de <b>Junta scrum KALI</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-calendar"></i>
+                                Cambió la fecha de <b>Junta scrum KALI</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Cambió el lugar de <b>Junta scrum KALI</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="far fa-calendar-plus"></i>
+                                Se eligió un horario de <b>Junta scrum KALI</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-hourglass"></i>
+                                Cambió la hora de <b>Preparación de Kali</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-calendar"></i>
+                                Cambió la fecha de <b>Preparación de Kali</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Cambió el lugar de <b>Preparación de Kali</b>
+                            </a>
+                            <hr style="margin:0px">
+                            <a class="dropdown-item" href="#" style="padding:15px">
+                                <i class="far fa-calendar-plus"></i>
+                                Se eligió un horario de <b>Preparación de Kali</b>
+                            </a>
+                            <hr style="margin:0px">
+                        </div>
+                    </li>
+                    <li class="nav-item cta"><a href="login.html" class="nav-link"><span>Salir</span></a></li>
+                </ul>
+            </div>
         </div>
     </nav>
     <!----------------->
@@ -102,16 +180,9 @@
 
       <div class="text-center upload">
         <img src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/13901313_1076212649126632_8982059158187016484_n.jpg?_nc_cat=107&_nc_oc=AQnwxSYcBPwnHTCORffHrFeYutVwSBNQBHwjDaE_14q0P_fO9l9pBhx6g8o8geRlCyo&_nc_ht=scontent-dfw5-1.xx&oh=9fd738bb364d60b2f95dfd3bfd7056d8&oe=5E2ED46F" class="avatar img-circle img-thumbnail" alt="avatar">
-        <h6>Upload a different photo...</h6>
-        <input type="file" class="text-center center-block file-upload">
+        
       </div></hr><br>
-
-               
-          <div class="panel panel-default">
-            <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
-            <div class="panel-body"><a href="https://www.facebook.com/salvador.brionesm">Facebook</a></div>
-          </div>
-          
+        
           
           <ul class="list-group">
             <li class="list-group-item text-muted">Meetings <i class="fa fa-dashboard fa-1x"></i></li>
@@ -128,7 +199,7 @@
             </div>
           </div>-->
           
-        </div><!--/col-3-->
+</div><!--/col-3-->
     	<div class="col-sm-9">
             
 
@@ -143,66 +214,28 @@
                       <div class="form-group">
                           
                           <div class="col-xs-6">
-                              <label for="first_name"><h4>First name</h4></label>
-                              <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
+                              <label for="first_name"><h4>Nombre</h4></label>
+                              <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Salvador" title="enter your first name if any." readonly>
                           </div>
                       </div>
                       <div class="form-group">
                           
                           <div class="col-xs-6">
-                            <label for="last_name"><h4>Last name</h4></label>
-                              <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="phone"><h4>Phone</h4></label>
-                              <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                             <label for="mobile"><h4>Mobile</h4></label>
-                              <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
+                            <label for="last_name"><h4>Apellido</h4></label>
+                              <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Embriones" title="enter your last name if any." readonly>
                           </div>
                       </div>
                       <div class="form-group">
                           
                           <div class="col-xs-6">
                               <label for="email"><h4>Email</h4></label>
-                              <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="email"><h4>Location</h4></label>
-                              <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                              <label for="password"><h4>Password</h4></label>
-                              <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6">
-                            <label for="password2"><h4>Verify</h4></label>
-                              <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
+                              <input type="email" class="form-control" name="email" id="email" placeholder="Sobriones97@gmail.com" title="enter your last name if any." readonly>
                           </div>
                       </div>
                       <div class="form-group">
                            <div class="col-xs-12">
                                 <br>
-                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                               	<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                               	<button class="btn btn-lg btn-success" type="edit"><i class="fas fa-pencil-alt"></i> Edit</button>
+                               	<a class= "btn btn-lg btn-success" href="user-edit.html" id="edit"><i class="fas fa-pencil-alt"></i> Edit</a>
                             </div>
                       </div>
               	</form>
