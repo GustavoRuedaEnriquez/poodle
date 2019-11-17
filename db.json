@@ -24,5 +24,28 @@
             "antigüedad":1,
             "imagen":"url" 
         }
+    ],
+    "meetings": [
+        {
+            "id": 1,
+            "nombre": "Junta Kaly",
+            "descripcion": "Una junta jaja",
+            "no_integrantes": 8,
+            "fecha": "2019-10-25 19:00:00",
+            "importancia": 5,
+            "horarios_propuestos": ["2019-10-25 19:00:00", "2019-10-26 19:00:00", "2019-10-25 20:00:00"],
+            "integrantes": [1, 2]
+        },
+        {
+            "id": 2,
+            "nombre": "Junta Kaly2",
+            "descripcion": "Una junta2 jaja",
+            "no_integrantes": 2,
+            "fecha": "2019-10-25 19:00:00",
+            "importancia": 5,
+            "horarios_propuestos": ["2019-10-25 19:00:00", "2019-10-26 19:00:00", "2019-10-25 20:00:00"],
+            "integrantes": [1, 2]
+        }
     ]
+
 }

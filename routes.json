@@ -1,3 +1,5 @@
 {
-    "/api/login":"login"
+    "/api/login": "login",
+    "/api/meetings": "meetings",
+    "/api/users": "users"
 }
