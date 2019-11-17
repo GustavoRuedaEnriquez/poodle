@@ -175,7 +175,7 @@
     <div class="container bootstrap snippet">
         <div class="row">
             <div class="col-sm-10">
-                <h1>Salvador Embriones</h1>
+                <h1 id="name_title"></h1>
             </div>
             <!--<div class="col-sm-2"><a href="/users" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="http://www.gravatar.com/avatar/28fd20ccec6865e2d5f0e1f4446eb7bf?s=100"></a></div>-->
         </div>
@@ -185,7 +185,7 @@
                 <div class="text-center upload">
                     <img src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/13901313_1076212649126632_8982059158187016484_n.jpg?_nc_cat=107&_nc_oc=AQnwxSYcBPwnHTCORffHrFeYutVwSBNQBHwjDaE_14q0P_fO9l9pBhx6g8o8geRlCyo&_nc_ht=scontent-dfw5-1.xx&oh=9fd738bb364d60b2f95dfd3bfd7056d8&oe=5E2ED46F"
                         class="avatar img-circle img-thumbnail" alt="avatar">
-                    <h6>Upload a different photo...</h6>
+                    <h6>Cargar una foto distinta...</h6>
                     <input type="file" class="text-center center-block file-upload">
                 </div>
 
@@ -193,15 +193,9 @@
 
                 <ul class="list-group">
                     <li class="list-group-item text-muted">Meetings <i class="fa fa-dashboard fa-1x"></i></li>
-                    <li class="list-group-item text-right">
-                        <span class="pull-left"><strong>Actuales</strong></span>13
-                    </li>
-                    <li class="list-group-item text-right">
-                        <span class="pull-left"><strong>Pendientes</strong></span>5
-                    </li>
-                    <li class="list-group-item text-right">
-                        <span class="pull-left"><strong>Asistidas</strong></span>125
-                    </li>
+                    <li id="actual" class="list-group-item text-right"></li>
+                    <li id="pending"class="list-group-item text-right"></li>
+                    <li id="assisted" class="list-group-item text-right"></li>
                     <li class="list-group-item text-right">
                         <span class="pull-left"><a href="calendario.html">Calendario</a>
                     </li>
@@ -219,7 +213,7 @@
                                     <h4>Nombre</h4>
                                 </label>
                                 <input type="text" class="form-control" name="first_name" id="first_name"
-                                    placeholder="Inserte Nombre" title="Nombre">
+                                    placeholder="" title="Nombre">
                             </div>
                         </div>
 
@@ -229,18 +223,18 @@
                                     <h4>Apellido</h4>
                                 </label>
                                 <input type="text" class="form-control" name="last_name" id="last_name"
-                                    placeholder="Inserte Apellido" title="Apellido">
+                                    placeholder="" title="Apellido">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <br>
-                                <label for="email">
-                                    <h4>Email</h4>
+                                <label for="username">
+                                    <h4>Nombre de usuario</h4>
                                 </label>
-                                <input type="email" class="form-control" name="email" id="email"
-                                    placeholder="Inserte email" title="Email">
+                                <input type="text" class="form-control" name="username" id="username"
+                                    placeholder="" title="Nombre de usuario">
                             </div>
                         </div>
 
@@ -251,7 +245,7 @@
                                     <h4>Contraseña</h4>
                                 </label>
                                 <input type="password" class="form-control" name="password" id="password"
-                                    placeholder="Contraseña" title="Contraseña">
+                                    placeholder="" title="Contraseña">
                             </div>
                         </div>
 
@@ -269,15 +263,23 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-xs-12">
-                                <a class="btn btn-lg btn-success" href="user.html" id="save"><i class="fas fa-pencil-alt"></i> Guardar</a>
+                            <div class="col-xs-3">
+                                <button type="submit" class="btn btn-lg btn-success" id="saveBtn"><i class="fas fa-pencil-alt"></i> Guardar</button>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                                <div class="col-xs-3">
+                                    <a type="button" class="btn btn-lg btn-danger" href="user.html"><i class="fas fa-times-circle"></i> Cancelar</a>
+                                </div>
+                            </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="../scripts/user-edit.js"></script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
