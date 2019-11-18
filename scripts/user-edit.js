@@ -1,7 +1,7 @@
 let users = [];
 
 let saveBtn = document.querySelector("#saveBtn");
-saveBtn.addEventListener("click",updateUserInfo);
+saveBtn.addEventListener("submit",updateUserInfo);
 
 function updateUserInfo(e) {
     let first_name = document.getElementById("first_name").value;
@@ -62,8 +62,6 @@ function writeUserInfo() {
 function init(){
     xhr = new XMLHttpRequest();
     xhr.open('GET','http://localhost:3000/users');
-    xhr.setRequestHeader('x-auth',localStorage.token);
-    xhr.setRequestHeader('x-user-token',localStorage.userToken);
     xhr.send()
     xhr.onload = function (){
         if(xhr.status != 200){

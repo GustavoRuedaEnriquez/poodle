@@ -21,8 +21,6 @@ function writeUserInfo() {
 function init(){
     xhr = new XMLHttpRequest();
     xhr.open('GET','http://localhost:3000/users');
-    xhr.setRequestHeader('x-auth',localStorage.token);
-    xhr.setRequestHeader('x-user-token',localStorage.userToken);
     xhr.send()
     xhr.onload = function (){
         if(xhr.status != 200){
