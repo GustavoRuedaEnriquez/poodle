@@ -1,51 +1,80 @@
 {
-    "users": [
-        {
-            "id":1 ,
-            "username":"sobriones98",
-            "email":"sbriones97@gmail.com",
-            "nombre":"Salvador",
-            "apellido":"Briones",
-            "ingreso":"22-08-2019",
-            "nacimiento":"17-07-1997",
-            "puesto":"becario",
-            "antigüedad":1,
-            "imagen":"url" 
-        },
-        {
-            "id":2 ,
-            "username":"wapi",
-            "email":"gus@gmail.com",
-            "nombre":"Gustavo",
-            "apellido":"Rueda",
-            "ingreso":"22-08-2019",
-            "nacimiento":"22-08-1998",
-            "puesto":"becario",
-            "antigüedad":1,
-            "imagen":"url" 
-        }
-    ],
-    "meetings": [
-        {
-            "id": 1,
-            "nombre": "Junta Kaly",
-            "descripcion": "Una junta jaja",
-            "no_integrantes": 8,
-            "fecha": "2019-10-25 19:00:00",
-            "importancia": 5,
-            "horarios_propuestos": ["2019-10-25 19:00:00", "2019-10-26 19:00:00", "2019-10-25 20:00:00"],
-            "integrantes": [1, 2]
-        },
-        {
-            "id": 2,
-            "nombre": "Junta Kaly2",
-            "descripcion": "Una junta2 jaja",
-            "no_integrantes": 2,
-            "fecha": "2019-10-25 19:00:00",
-            "importancia": 5,
-            "horarios_propuestos": ["2019-10-25 19:00:00", "2019-10-26 19:00:00", "2019-10-25 20:00:00"],
-            "integrantes": [1, 2]
-        }
-    ]
-
+  "users": [
+    {
+      "id": 1,
+      "username": "sobriones98",
+      "email": "sbriones97@gmail.com",
+      "nombre": "Salvador",
+      "apellido": "Briones",
+      "ingreso": "22-08-2019",
+      "nacimiento": "17-07-1997",
+      "puesto": "becario",
+      "antigüedad": 1,
+      "imagen": "url"
+    },
+    {
+      "id": 2,
+      "username": "wapi",
+      "email": "gus@gmail.com",
+      "nombre": "Gustavo",
+      "apellido": "Rueda",
+      "ingreso": "22-08-2019",
+      "nacimiento": "22-08-1998",
+      "puesto": "becario",
+      "antigüedad": 1,
+      "imagen": "url"
+    }
+  ],
+  "meetings": [
+    {
+      "id": 1,
+      "nombre": "Junta Kaly",
+      "descripcion": "Una junta jaja",
+      "no_integrantes": 8,
+      "fecha": "2019-10-25 19:00:00",
+      "importancia": 5,
+      "horarios_propuestos": [
+        "2019-10-25 19:00:00",
+        "2019-10-26 19:00:00",
+        "2019-10-25 20:00:00"
+      ],
+      "integrantes": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Junta Kaly2",
+      "descripcion": "Una junta2 jaja",
+      "no_integrantes": 2,
+      "fecha": "2019-10-25 19:00:00",
+      "importancia": 5,
+      "horarios_propuestos": [
+        "2019-10-25 19:00:00",
+        "2019-10-26 19:00:00",
+        "2019-10-25 20:00:00"
+      ],
+      "integrantes": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "OCTAVIO BRIONESSSS",
+      "descripcion": "JUNTA MIL",
+      "no_integrantes": 3,
+      "fecha": "SOME DATE",
+      "importancia": 3,
+      "horarios_propuestos": [
+        "SOME1 DATE",
+        "SOME2 DATE"
+      ],
+      "integrantes": [
+        1,
+        2
+      ]
+    }
+  ]
 }

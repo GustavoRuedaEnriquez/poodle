@@ -1,7 +1,8 @@
 let dates = []
 let people = []
 
-function createMeeting () {
+function createMeeting (e) {
+    console.log("foo")
     let nombre = document.querySelector('#fname').value
     let description = document.querySelector('#description').value
     let importance = document.querySelector('#importance').value
@@ -20,34 +21,35 @@ function createMeeting () {
         'horarios_propuestos': dates,
         'integrantes': people,
     }
+    console.log(resultJson)
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST','/api/meetings');
+    let xhr = new XMLHttpRequest()
+    xhr.open('POST','http://localhost:3000/api/meetings')
 
-    xhr.setRequestHeader('Content-type','application/json');
-    xhr.send(resultJson);
+    xhr.setRequestHeader('Content-type','application/json')
+    xhr.send(resultJson)
     
     xhr.onload = function(){
         if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.");
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             alert('Meeting Creada')
-            window.location.href = "/MyMeetings.html";
+            window.location.href = "/MyMeetings.html"
         }
     }
 }
 
 
-function detalleMeeting (id) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET','/api/meetings/'+id);
+function detalleMeetingById (id) {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET','http://localhost:3000/api/meetings/'+id)
 
-    xhr.setRequestHeader('Content-type','application/json');
-    xhr.send(resultJson);
+    xhr.setRequestHeader('Content-type','application/json')
+    xhr.send(resultJson)
     
     xhr.onload = function(){
         if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.");
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             resultJson = xhr.response.body
 
@@ -61,13 +63,28 @@ function detalleMeeting (id) {
     }
 }
 
-function getMeetingData (id) {
-    xhr.open('GET','/api/meetings/'+id)
+function getMeetingDataById (id) {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET','http://localhost:3000/api/meetings/'+id)
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.");
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
+        }else{
+            console.log(xhr.response.body)
+        }
+    }
+}
+
+function getMeetings () {
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.send()
+    
+    xhr.onload = function(){
+        if(xhr.status != 200){
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             console.log(xhr.response.body)
         }
@@ -93,29 +110,30 @@ function editMeeting (id) {
         'integrantes': people,
     }
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('PUT','/api/meetings/' + id);
+    let xhr = new XMLHttpRequest()
+    xhr.open('PUT','http://localhost:3000/api/meetings/' + id)
 
-    xhr.setRequestHeader('Content-type','application/json');
-    xhr.send(resultJson);
+    xhr.setRequestHeader('Content-type','application/json')
+    xhr.send(resultJson)
     
     xhr.onload = function(){
         if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.");
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             alert('Meeting Modificada')
-            window.location.href = "/calendario.html";
+            window.location.href = "/calendario.html"
         }
     }
 }
 
 function getUserId (username) {
-    xhr.open('GET','/api/users?username=' + username)
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET','http://localhost:3000/api/users?username=' + username)
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.");
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             return xhr.response.body.id
         }
@@ -123,12 +141,13 @@ function getUserId (username) {
 }
 
 function getLastMeetingId () {
-    xhr.open('GET','/api/meetings')
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET','http://localhost:3000/api/meetings')
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.");
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             allMeetings = xhr.response.body
             return allMeetings[allMeetings.length-1].id
