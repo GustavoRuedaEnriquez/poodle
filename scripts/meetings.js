@@ -73,7 +73,7 @@ function detailAllMeeting (userId) {
                 let dateTime = auxDate.getTime()
                 htmlMeetings += `<tr onclick="clickRow(${item.id})">
                         <th scope="row">${item.id}</th>
-                        <td>${item.nombre}Junta de Kali</td>
+                        <td>${item.nombre}</td>
                         <td>${dateDay}</td>
                         <td>${dateTime}</td>
                         <td>${item.importancia}</td>
