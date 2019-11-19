@@ -23,8 +23,7 @@
         }
         #register-container {
             margin: auto;
-            margin-top: 2%;
-            margin-bottom: 10%;
+            margin-top: 0.5%;
             width: 350px;
         }
 
@@ -65,51 +64,59 @@
 
     <div class="card" id="register-container">
         <article class="card-body mx-auto" style="max-width: 400px;">
-            <h4 class="card-title mt-4 text-center">Registrarse</h4>
-            <form>
+            <h5 class="card-title mt-4 text-center">Registrarse</h5>
+            <form id="form">
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
-                    <input name="" class="form-control" placeholder="Nombre completo" type="text">
+                    <input id="firstname" name="firstname" class="form-control" placeholder="Nombre(s)" type="text" pattern="[A-Za-z]" required>
+                </div>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input id="lastname" name="lastname" class="form-control" placeholder="Apellidos" type="text" pattern="[A-Za-z]" required>
                 </div>
                 <div class="form-group input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"> <i class="fas fa-at"></i> </span>
                         </div>
-                        <input name="" class="form-control" placeholder="Nombre de usuario" type="text">
+                        <input id="username" name="username" class="form-control" placeholder="Nombre de usuario" type="text" required>
                     </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                     </div>
-                    <input name="" class="form-control" placeholder="Correo" type="email">
+                    <input id="email" name="email" class="form-control" placeholder="Correo" type="email" required>
                 </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-building"></i> </span>
                     </div>
-                    <input name="" class="form-control" placeholder="Puesto" type="text">
+                    <input id="position" name="position" class="form-control" placeholder="Puesto" type="text" required>
                 </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                     </div>
-                    <input class="form-control" placeholder="Contraseña" type="password">
+                    <input id="password" class="form-control" placeholder="Contraseña" type="password" required>
                 </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                     </div>
-                    <input class="form-control" placeholder="Repita su contraseña" type="password">
+                    <input id="password_check" class="form-control" placeholder="Repita su contraseña" type="password" required>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                    <button id="registerBtn" type="submit" class="btn btn-primary btn-block">Registrarse</button>
                 </div>
                 <p class="text-center">¿Ya tienes cuenta?<a href="login.html">&nbsp;Ingresar</a> </p>
             </form>
         </article>
     </div>
+
+    <script src="../scripts/registry.js"></script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

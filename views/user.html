@@ -96,13 +96,9 @@
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active"><a href="admin-activity.html" class="nav-link">Dashboard</a></li>
-                    <li class="nav-item cta"><a href="admin-view-users.html" class="nav-link">Administrar Usuarios</a>
-                    </li>
                     <li class="nav-item cta"><a href="CreateMeeting.html" class="nav-link"><span>Crear</span></a></li>
-                    <li class="nav-item cta"><a href="dashboard-participant.html"
-                            class="nav-link"><span>Meetings</span></a></li>
-                    <li class="nav-item cta"><a href="MyMeetings.html" class="nav-link"><span>Mis Meetings</span></a>
-                    </li>
+                    <li class="nav-item cta"><a href="dashboard-participant.html" class="nav-link"><span>Meetings</span></a></li>
+                    <li class="nav-item cta"><a href="MyMeetings.html" class="nav-link"><span>Mis Meetings</span></a></li>
                     <li class="nav-item cta"><a href="user.html" class="nav-link"><span>Mi perfil</span></a></li>
                     <li class="nav-item cta dropdown">
                         <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -164,15 +160,12 @@
             </div>
         </div>
     </nav>
-    <!----------------->
-
 
     <div class="container bootstrap snippet">
         <div class="row">
             <div class="col-sm-10">
-                <h1>Salvador Embriones</h1>
+                <h1 id="name_title"></h1>
             </div>
-            <!--<div class="col-sm-2"><a href="/users" class="pull-right"><img title="profile image" class="img-circle img-responsive" src="http://www.gravatar.com/avatar/28fd20ccec6865e2d5f0e1f4446eb7bf?s=100"></a></div>-->
         </div>
         <div class="row">
             <div class="col-sm-3">
@@ -185,44 +178,34 @@
                 </hr><br>
                 <ul class="list-group">
                     <li class="list-group-item text-muted">Meetings <i class="fa fa-dashboard fa-1x"></i></li>
-                    <li class="list-group-item text-right"><span class="pull-left"><strong>Actuales</strong></span> 13
-                    </li>
-                    <li class="list-group-item text-right"><span class="pull-left"><strong>Pendientes</strong></span> 5
-                    </li>
-                    <li class="list-group-item text-right"><span class="pull-left"><strong>Asistidas</strong></span> 125
-                    </li>
+                    <li id="actual" class="list-group-item text-right"></li>
+                    <li id="pending" class="list-group-item text-right"></li>
+                    <li id="assisted" class="list-group-item text-right"></li>
                     <li class="list-group-item text-right"><span class="pull-left"><a
                                 href="calendario.html">Calendario</a></span></li>
                 </ul>
             </div>
-            <!--/col-3-->
             <div class="col-sm-9">
-                <!--/tab-pane-->
                 <div class="tab-pane" id="messages">
-
-                    <h2></h2>
-
                     <hr>
                     <form class="form" action="##" method="post" id="registrationForm">
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <br>
                                 <label for="first_name">
                                     <h4>Nombre</h4>
                                 </label>
                                 <input type="text" class="form-control" name="first_name" id="first_name"
-                                    placeholder="Salvador" title="enter your first name if any." readonly>
+                                    placeholder="" title="Nombre" readonly>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-xs-6">
-                                <br>
                                 <label for="last_name">
                                     <h4>Apellido</h4>
                                 </label>
                                 <input type="text" class="form-control" name="last_name" id="last_name"
-                                    placeholder="Embriones" title="enter your last name if any." readonly>
+                                    placeholder="" title="Apellido" readonly>
                             </div>
                         </div>
 
@@ -233,7 +216,18 @@
                                     <h4>Correo</h4>
                                 </label>
                                 <input type="email" class="form-control" name="email" id="email"
-                                    placeholder="Sobriones97@gmail.com" title="enter your last name if any." readonly>
+                                    placeholder="" title="Correo" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <br>
+                                <label for="email">
+                                    <h4>Nombre de usuario</h4>
+                                </label>
+                                <input type="text" class="form-control" name="username" id="username"
+                                    placeholder="" title="Nombre de usuario" readonly>
                             </div>
                         </div>
 
@@ -249,6 +243,8 @@
                 </div>
 
             </div>
+
+            <script src="../scripts/user.js"></script>
 
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -266,8 +262,6 @@
             <script src="js/scrollax.min.js"></script>
             <script
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false">
-            </script>
-
             </script>
 </body>
 
