@@ -1,5 +1,6 @@
 let dates = []
 let people = []
+console.log("meetings.js load")
 
 function createMeeting (e) {
     console.log("foo")
@@ -11,20 +12,20 @@ function createMeeting (e) {
     // already have people
     // already have quantity of people
 
-    let resultJson = {
+    let resultJson = JSON.stringify({
         'id': id,
         'nombre': nombre,
         'descripcion': description,
-        'no_integrantes': people.length,
+        'no_integrantes': people.lenght,
         'fecha': null,
         'importancia': importance,
         'horarios_propuestos': dates,
-        'integrantes': people,
-    }
+        'integrantes': people
+    })
     console.log(resultJson)
 
     let xhr = new XMLHttpRequest()
-    xhr.open('POST','http://localhost:3000/api/meetings')
+    xhr.open('POST','http://localhost:3000/meetings')
 
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -42,7 +43,7 @@ function createMeeting (e) {
 
 function detalleMeetingById (id) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meetings/'+id)
+    xhr.open('GET','http://localhost:3000/meetings/'+id)
 
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -65,7 +66,7 @@ function detalleMeetingById (id) {
 
 function getMeetingDataById (id) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meetings/'+id)
+    xhr.open('GET','http://localhost:3000/meetings/'+id)
     xhr.send()
     
     xhr.onload = function(){
@@ -79,7 +80,7 @@ function getMeetingDataById (id) {
 
 function getMeetings () {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.open('GET','http://localhost:3000/meetings')
     xhr.send()
     
     xhr.onload = function(){
@@ -111,7 +112,7 @@ function editMeeting (id) {
     }
 
     let xhr = new XMLHttpRequest()
-    xhr.open('PUT','http://localhost:3000/api/meetings/' + id)
+    xhr.open('PUT','http://localhost:3000/meetings/' + id)
 
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -128,7 +129,7 @@ function editMeeting (id) {
 
 function getUserId (username) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/users?username=' + username)
+    xhr.open('GET','http://localhost:3000/users?username=' + username)
     xhr.send()
     
     xhr.onload = function(){
@@ -142,14 +143,14 @@ function getUserId (username) {
 
 function getLastMeetingId () {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.open('GET','http://localhost:3000/meetings')
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            allMeetings = xhr.response.body
+            allMeetings = xhr.response
             return allMeetings[allMeetings.length-1].id
         }
     }

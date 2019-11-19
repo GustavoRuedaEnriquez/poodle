@@ -75,6 +75,15 @@
         1,
         2
       ]
+    },
+    {
+      "id": 4,
+      "nombre": "a",
+      "descripcion": "a",
+      "fecha": null,
+      "importancia": "1",
+      "horarios_propuestos": [],
+      "integrantes": []
     }
   ]
 }

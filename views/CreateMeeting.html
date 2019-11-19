@@ -131,7 +131,7 @@
             <div class="row" style="margin: 30px">
                 <div class="col-md-12">
                     <div class="well well-sm">
-                        <form class="form-horizontal" method="post">
+                        <form class="form-horizontal">
                             <fieldset>
                                 <legend class="text-center header">CREAR MEETING</legend>
 
@@ -216,7 +216,7 @@
                                 </div>
 
                                 <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary btn-lg" id="createBtn">Submit</button>
+                                    <button type="button" class="btn btn-primary btn-lg" id="createBtn">Submit</button>
                                 </div>
                             </fieldset>
                         </form>
@@ -233,7 +233,9 @@
         $('#timepicker').timepicker()
         
         let createMeetingBtn = document.getElementById("createBtn")
-        createMeetingBtn.addEventListener("submit", createMeeting)
+        createMeetingBtn.addEventListener("click", createMeeting)
+        console.log(createMeeting)
+        console.log(createMeetingBtn)
     </script>
 
 
