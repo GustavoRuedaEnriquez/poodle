@@ -1,7 +1,7 @@
 let users = [];
 
 let saveBtn = document.querySelector("#saveBtn");
-saveBtn.addEventListener("submit",updateUserInfo);
+saveBtn.addEventListener("click",updateUserInfo);
 
 function updateUserInfo(e) {
     let first_name = document.getElementById("first_name").value;
@@ -35,7 +35,7 @@ function updateUserInfo(e) {
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido.");
         }else{
-            location.reload();
+            location.href = 'user.html';
         }
     }
 
