@@ -1,7 +1,38 @@
 'use strict'
 
 const  moment = require('moment');
+const jwt = require('../services/jwt');
+
 let User = require('../models/user');
+
+function login(req, res){
+    let correo = req.body.email;
+    let password = req.body.password;
+
+    if (correo == undefined) {
+        res.status(400).send({'message':'Email is missing.'});
+    }
+    if (password == undefined) {
+        res.status(400).send({'message':'Password is missing.'});
+    }
+
+    User.findOne({email: correo},(err,user) => {
+        if(err){
+            res.status(500).send({message: 'Server error.'});
+        } else {
+            if(Object.entries(user).length === 0){
+                res.status(404).send({message: 'User not found.'});
+            } else {
+                if(password == user.password){
+                    let token = jwt.createToken(user);
+                    res.status(200).send({message: 'Logged in', token : token});
+                } else {
+                    res.status(403).send({message: 'Invalid password'});
+                }
+            }
+        }
+    });
+}
 
 function addUser(req, res){    
     let user = new User();
@@ -31,7 +62,6 @@ function getUsers(req, res){
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
-            console.log(users)
             if(Object.entries(users).length === 0){
                 res.status(404).send({message: 'No users found.'});
             }else{
@@ -61,7 +91,7 @@ function getUserById(req,res){
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
-            if(Object.entries(users).length === 0){
+            if(Object.entries(user).length === 0){
                 res.status(404).send({message: 'User not found.'});
             }else{
                 res.status(200).send({message:'User obtained', result : user});
@@ -76,7 +106,7 @@ function getUserByEmail(req,res){
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
-            if(Object.entries(users).length === 0){
+            if(Object.entries(user).length === 0){
                 res.status(404).send({message: 'User not found.'});
             }else{
                 res.status(200).send({message:'User obtained', result : user});
@@ -85,11 +115,30 @@ function getUserByEmail(req,res){
     });
 }
 
+function updateUser(req, res){
+  
+    let userEmail = req.params.email;
+    let update = req.body;
+
+    User.findOneAndUpdate({email: userEmail}, update, {new:true}, (err,updatedUser) =>{
+        if(err){
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(!updatedUser){
+                res.status(404).send({message: 'Could not update the user.'});
+            }else{
+                res.status(200).send({message:'User obtained', result : updatedUser})
+            }
+        }
+    });
+}
 
 module.exports = {
+    login,
     addUser,
     getUsers,
     getUsersPage,
     getUserById,
-    getUserByEmail
+    getUserByEmail,
+    updateUser
 };
