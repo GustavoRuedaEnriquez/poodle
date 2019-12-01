@@ -9,11 +9,11 @@ let proposalSchema = mongoose.Schema({
     },
     votes:{
         type: Number,
-        required: true,
+        default: 0
     },
     voters:{
         type: Array,
-        required:true
+        default: []
     }
 });
 
