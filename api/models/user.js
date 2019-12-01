@@ -5,20 +5,20 @@ const mongoose = require('mongoose');
 let usersSchema = mongoose.Schema({
     username:{
         type: String,
-        require: true
+        required: true
     },
     email:{
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     nombre:{
         type: String,
-        require:true
+        required:true
     },
     apellido:{
         type: String,
-        require:true
+        required:true
         
     },
     date:{
