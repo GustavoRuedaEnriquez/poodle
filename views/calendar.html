@@ -24,7 +24,7 @@
     </script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 
-
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
@@ -144,7 +144,7 @@
    <!--Navigation bar-->
    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark" id="ftco-navbar">
       <div class="container">
-          <a class="navbar-brand" href="calendar.html">Poodle</a>
+          <a class="navbar-brand" href="calendar.html" style="font-weight: bold;">Poodle</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
               aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="oi oi-menu"></span> Menu
@@ -222,7 +222,35 @@
           <input type="radio" name="type" value="month" checked="checked"> Mes
           <input type="radio" name="type" value="week"> Semana<br>
         </div>
-        <div class="calendar" >
+        <div class="calendar" id="calendar-week" style="display:none">
+            <div class="calendar__month">
+                <div class="cal-month__previous"><</div>
+                <div class="cal-month__current"></div>
+                <div class="cal-month__next">></div>
+              </div>
+              <div class="calendar__head">
+                <div class="cal-head__day"></div>
+                <div class="cal-head__day"></div>
+                <div class="cal-head__day"></div>
+                <div class="cal-head__day"></div>
+                <div class="cal-head__day"></div>
+                <div class="cal-head__day"></div>
+                <div class="cal-head__day"></div>
+              </div>
+              <div class="calendar__body">
+                  <div class="cal-body__week">
+                    <div class="cal-body__day"></div>
+                    <div class="cal-body__day"></div>
+                    <div class="cal-body__day"></div>
+                    <div class="cal-body__day"></div>
+                    <div class="cal-body__day"></div>
+                    <div class="cal-body__day"></div>
+                    <div class="cal-body__day"></div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="calendar" id="calendar-month">
             <div class="calendar__month">
               <div class="cal-month__previous"><</div>
               <div class="cal-month__current"></div>
@@ -294,21 +322,40 @@
               </div>
             </div>
           </div>              
-        
-    </div>
+        </div>
+        <div id="day-details" style="display: none;">
 
+        </div>
+    </div>
     
     <!-- Optional JavaScript -->
     <script src="../node_modules/moment/moment.js"></script>
     <script>
+        var radios = document.querySelectorAll('input[type=radio][name="type"]');
+        var sectionMonth = document.getElementById("calendar-month")
+        var sectionWeek = document.getElementById("calendar-week");
+
+        function changeHandler(event) {
+          if ( this.value === 'month' ) {
+            sectionMonth.setAttribute("style","display:block")
+            sectionWeek.setAttribute("style","display:none")
+          } else if ( this.value === 'week' ) {
+            sectionMonth.setAttribute("style","display:none")
+            sectionWeek.setAttribute("style","display:block")
+          }  
+        }
+
+        Array.prototype.forEach.call(radios, function(radio) {
+          radio.addEventListener('change', changeHandler);
+        });
+
         class Calendar {
-  
-            constructor () {
-                this.monthDiv = document.querySelector('.cal-month__current')
-                this.headDivs = document.querySelectorAll('.cal-head__day')
-                this.bodyDivs = document.querySelectorAll('.cal-body__day')
-                this.nextDiv = document.querySelector('.cal-month__next')
-                this.prevDiv = document.querySelector('.cal-month__previous')
+            constructor (id) {
+                this.monthDiv = document.getElementById(id).querySelector('.cal-month__current')
+                this.headDivs = document.getElementById(id).querySelectorAll('.cal-head__day')
+                this.bodyDivs = document.getElementById(id).querySelectorAll('.cal-body__day')
+                this.nextDiv = document.getElementById(id).querySelector('.cal-month__next')
+                this.prevDiv = document.getElementById(id).querySelector('.cal-month__previous')
             }
             
             init () {
@@ -337,8 +384,10 @@
                     } else {
                     this.selected = moment(`${this.month.format('YYYY-MM')}-${date}`)
                     }
-
+                    
+                    this.nextDiv = document.getElementById("day-details").setAttribute('style', 'display:none;')
                     this.update()
+                    // add day details
                 })
                 })
                 
@@ -347,13 +396,13 @@
             
             update () {
                 this.calendarDays = {
-                first: this.month.clone().startOf('month').startOf('week').date(),
-                last: this.month.clone().endOf('month').date()
+                  first: this.month.clone().startOf('month').startOf('week').date(),
+                  last: this.month.clone().endOf('month').date()
                 }
                 
                 this.monthDays = {
-                lastPrevious: this.month.clone().subtract(1,'months').endOf('month').date(),
-                lastCurrent: this.month.clone().endOf('month').date()
+                  lastPrevious: this.month.clone().subtract(1,'months').endOf('month').date(),
+                  lastCurrent: this.month.clone().endOf('month').date()
                 }
                 
                 this.monthString = this.month.clone().format('MMMM YYYY')
@@ -387,19 +436,19 @@
                 let index = 0
 
                 if (this.calendarDays.first > 1) {
-                for (let day = this.calendarDays.first; day <= this.monthDays.lastPrevious; index ++) {
-                    //this.bodyDivs[index].innerText = day++
-                    dateString = '' + this.month.format('YYYY-MM') + '-' + day
-                    console.log(dateString)
-                    // request para obtener datos de dicha fecha
-                    this.drawDay(index, day, ['data jaja', 'data2 jaja'])
-                    day++
-                    
+                  for (let day = this.calendarDays.first; day <= this.monthDays.lastPrevious; index ++) {
+                      //this.bodyDivs[index].innerText = day++
+                      dateString = '' + this.month.format('YYYY-MM') + '-' + day
+                      console.log(dateString)
+                      // request para obtener datos de dicha fecha
+                      this.drawDay(index, day, ['data jaja', 'data2 jaja'])
+                      day++
+                      
 
-                    this.cleanCssClasses(false, index)
+                      this.cleanCssClasses(false, index)
 
-                    this.bodyDivs[index].classList.add('cal-day__month--previous')
-                } 
+                      this.bodyDivs[index].classList.add('cal-day__month--previous')
+                  } 
                 }
 
                 let isNextMonth = false
@@ -456,8 +505,10 @@
             }
         }
 
-        const cal = new Calendar()
-        cal.init()
+        const cal_month = new Calendar("calendar-month")
+        cal_month.init()
+        const cal_week = new Calendar("calendar-week")
+        cal_week.init()
 
     </script>
 </body>
