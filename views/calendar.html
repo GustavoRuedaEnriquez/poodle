@@ -31,107 +31,112 @@
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
     <style>
-        body {
-  background-color: #333;
-  color: #aaa;
-  font-family: 'Josefin Sans';
-}
+      #ftco-navbar {
+          position: fixed;
+          z-index: 2;
+          width: 100%;
+      }
+      body {
+          color: #566787;
+          background: #f5f5f5;
+          font-family: 'Work Sans', Arial, sans-serif;
+          font-size: 13px;
+      }
 
-.calendar {
-  width: 70%;
-  max-width: 750px;
-  margin: 50px auto 0;
-}
+      .calendar {
+        width: 70%;
+        max-width: 750px;
+        margin: 10px auto 0;
+      }
 
-.calendar__month {
-  font-size: 20px;
-  font-weight: 800;
-  padding: 10px 0;
-  width: 100%;
-  position: relative;
-}
+      .calendar__month {
+        font-size: 20px;
+        font-weight: 800;
+        padding: 10px 0;
+        width: 100%;
+        position: relative;
+      }
 
-.cal-month__previous,
-.cal-month__next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  
-  &:hover {
-    background-color: #42A5F5;
-    box-shadow: 0 5px 5px -5px rgba(0,0,0,0.75);
-    border-radius: 50%;
-    font-weight: 800;
-    color: #111;
-  }
-}
+      .cal-month__previous,
+      .cal-month__next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        
+        &:hover {
+          background-color: #42A5F5;
+          box-shadow: 0 5px 5px -5px rgba(0,0,0,0.75);
+          border-radius: 50%;
+          font-weight: 800;
+          color: #111;
+        }
+      }
 
-.cal-month__next {
-  right: 0;
-}
+      .cal-month__next {
+        right: 0;
+      }
 
-.cal-month__current {
-  text-align: center;
-  color: #e1e1e1;
-}
+      .cal-month__current {
+        text-align: center;
+        color: black;
+      }
 
-.cal-head__day,
-.cal-body__day {
-  display: inline-block;
-  width: 14.2857%;
-  height: 50px;
-  float: left;
-  text-align: center;
-}
+      .cal-head__day,
+      .cal-body__day {
+        display: inline-block;
+        width: 14.2857%;
+        height: 80px;
+        float: left;
+        text-align: center;
+      }
 
-.cal-body__week,
-.calendar__head {
-  display: block;
-  height: 50px;
-  width: 100%;
-}
+      .cal-body__week,
+      .calendar__head {
+        display: block;
+        width: 100%;
+      }
 
-.calendar__head {
-  line-height: 50px;
-  position: relative;
-  
-  &:after {
-    content: ' ';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #90CAF9;
-  }
-}
+      .calendar__head {
+        line-height: 50px;
+        position: relative;
+        
+        &:after {
+          content: ' ';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background-color: #90CAF9;
+        }
+      }
 
-.cal-body__day {
-  color: #777;
-  line-height: 50px;
-  text-align: center;
-  cursor: pointer;
-}
+      .cal-body__day {
+        color: lightgray;
+        height: 80px;
+        text-align: left;
+        padding: 2px;
+        cursor: pointer;
+      }
 
-.cal-day__month--current {
-  color: #e1e1e1;
-}
+      .cal-day__month--current {
+        color: black;
+      }
 
-.cal-day__day--today {
-  font-weight: 800;
-  color: #2196f3;
-}
+      .cal-day__day--today {
+        font-weight: 800;
+        color: #2196f3;
+      }
 
-.cal-day__day--selected {
-  background-color: #2196f3;
-  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, .75);
-  border-radius: 50%;
-  color: #111;
-}
+      .cal-day__day--selected {
+        background-color: #2196f3;
+        box-shadow: 0 5px 10px -5px rgba(0, 0, 0, .75);
+        color: #111;
+      }
     </style>
 </head>
 
@@ -212,8 +217,12 @@
   </nav>
   <!----------------->
 
-    <div class="wrapper">
-        <div class="calendar">
+    <div class="container" style="padding-top: 80px;">
+        <div>
+          <input type="radio" name="type" value="month" checked="checked"> Mes
+          <input type="radio" name="type" value="week"> Semana<br>
+        </div>
+        <div class="calendar" >
             <div class="calendar__month">
               <div class="cal-month__previous"><</div>
               <div class="cal-month__current"></div>
@@ -318,7 +327,8 @@
                 
                 this.bodyDivs.forEach(day => {
                 day.addEventListener('click', e => {
-                    const date = +e.target.innerHTML < 10 ? `0${e.target.innerHTML}` : e.target.innerHTML
+                    const date = +e.target.attributes['value']['value'] < 10 ? 
+                      `0${e.target.attributes['value']['value']}` : e.target.attributes['value']['value']
 
                     if (e.target.classList.contains('cal-day__month--next')) {
                     this.selected = moment(`${this.month.add(1, 'month').format('YYYY-MM')}-${date}`)
@@ -363,14 +373,28 @@
                 this.update()
             }
             
+            drawDay (index, day, data) {
+              this.bodyDivs[index].innerHTML = '<b>' + (day) + '</b>'
+              data.forEach(item => {
+                this.bodyDivs[index].innerHTML += '<div style="line-height: 0.9;font-size: 9px;" value="'+day+'">' + item.toUpperCase() + '</div>'
+              })
+              this.bodyDivs[index].setAttribute("value",day)
+            }
+
             draw () {
                 this.monthDiv.innerText = this.monthString
-            
+                let dateString = ''
                 let index = 0
 
                 if (this.calendarDays.first > 1) {
                 for (let day = this.calendarDays.first; day <= this.monthDays.lastPrevious; index ++) {
-                    this.bodyDivs[index].innerText = day++
+                    //this.bodyDivs[index].innerText = day++
+                    dateString = '' + this.month.format('YYYY-MM') + '-' + day
+                    console.log(dateString)
+                    // request para obtener datos de dicha fecha
+                    this.drawDay(index, day, ['data jaja', 'data2 jaja'])
+                    day++
+                    
 
                     this.cleanCssClasses(false, index)
 
@@ -380,28 +404,39 @@
 
                 let isNextMonth = false
                 for (let day = 1; index <= this.bodyDivs.length - 1; index ++) {
-                if (day > this.monthDays.lastCurrent) {
-                    day = 1
-                    isNextMonth = true
-                }
+                  if (day > this.monthDays.lastCurrent) {
+                      day = 1
+                      isNextMonth = true
+                  }
 
-                this.cleanCssClasses(true, index)
+                  this.cleanCssClasses(true, index)
 
-                if (!isNextMonth) {
-                    if (day === this.today.date() && this.today.isSame(this.month, 'day')) {
-                    this.bodyDivs[index].classList.add('cal-day__day--today') 
-                    }
+                  if (!isNextMonth) {
+                      if (day === this.today.date() && this.today.isSame(this.month, 'day')) {
+                      this.bodyDivs[index].classList.add('cal-day__day--today') 
+                      }
 
-                    if (day === this.selected.date() && this.selected.isSame(this.month, 'month')) {
-                    this.bodyDivs[index].classList.add('cal-day__day--selected') 
-                    }
+                      if (day === this.selected.date() && this.selected.isSame(this.month, 'month')) {
+                      this.bodyDivs[index].classList.add('cal-day__day--selected') 
+                      }
 
-                    this.bodyDivs[index].classList.add('cal-day__month--current')
-                } else {
-                    this.bodyDivs[index].classList.add('cal-day__month--next')
-                }
+                      this.bodyDivs[index].classList.add('cal-day__month--current')
+                      dateString = '' + this.month.format('YYYY') + '-' + this.month.format('MM') + '-' + day
+                  } else {
+                      this.bodyDivs[index].classList.add('cal-day__month--next')
+                      if (this.month._d.getMonth() === 11) {
+                        dateString = '' + this.month.format('YYYY') + '-' + '01' + '-' + day
+                      } else {
+                        dateString = '' + this.month.format('YYYY') + '-' + (this.month._d.getMonth()+2) + '-' + day
+                      }
+                      
+                  }
 
-                this.bodyDivs[index].innerText = day++
+                  //this.bodyDivs[index].innerText = day++
+                  console.log(dateString)
+                  // request para obtener datos de dicha fecha
+                  this.drawDay(index, day, ['mas datos jaja', 'mas datax2 jaja'])
+                  day++
                 }
             }
             
