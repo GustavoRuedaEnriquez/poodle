@@ -1,7 +1,6 @@
 let dates = []
 let people = []
 let usersnames = []
-console.log("meetings.js load")
 
 function createMeeting (e) {
     console.log("foo")
@@ -12,6 +11,11 @@ function createMeeting (e) {
     // already have dates
     // already have people
     // already have quantity of people
+
+    if (!(nombre && description && importance)) {
+        alert("Faltan datos")
+        return
+    }
 
     let resultJson = JSON.stringify({
         'id': id,
@@ -64,6 +68,7 @@ function detailAllMeeting (userId) {
                         <th scope="col">Fecha</th>
                         <th scope="col">Hora</th>
                         <th scope="col">Importancia</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>`
@@ -71,12 +76,13 @@ function detailAllMeeting (userId) {
                 let auxDate = new Date(item.fecha)
                 let dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
                 let dateTime = auxDate.getTime()
-                htmlMeetings += `<tr onclick="clickRow(${item.id})">
-                        <th scope="row">${item.id}</th>
-                        <td>${item.nombre}</td>
-                        <td>${dateDay}</td>
-                        <td>${dateTime}</td>
-                        <td>${item.importancia}</td>
+                htmlMeetings += `<tr>
+                        <th onclick="clickRow(${item.id})" scope="row">${item.id}</th>
+                        <td onclick="clickRow(${item.id})">${item.nombre}</td>
+                        <td onclick="clickRow(${item.id})">${dateDay}</td>
+                        <td onclick="clickRow(${item.id})">${dateTime}</td>
+                        <td onclick="clickRow(${item.id})">${item.importancia}</td>
+                        <td><i class="fas fa-edit" onclick="editRow(${item.id})"></i></td>
                     </tr>`
             })
             htmlMeetings += `</tbody>
@@ -87,7 +93,7 @@ function detailAllMeeting (userId) {
     }
 }
 
-function getMeetingDataById (id) {
+function getMeetingDataById (id, type) {
     let xhr = new XMLHttpRequest()
     xhr.open('GET','http://localhost:3000/meetings/'+id)
     xhr.send()
@@ -102,76 +108,81 @@ function getMeetingDataById (id) {
                 dateResult = jsonResult.fecha.split(' ')[0]
                 timeResult = jsonResult.fecha.split(' ')[1]
             } else {
-                dateResult = null
-                timeResult = null
+                dateResult = ""
+                timeResult = ""
+            }
+            document.getElementById("datepicker").value = dateResult
+            document.getElementById("timepicker").value = timeResult
+            if (type === 'detail') {
+                document.getElementById("nameMeetingLabel").innerText = jsonResult.nombre
+                document.getElementById("importanceLabel").innerText = jsonResult.importancia
+                document.getElementById("organizerLabel").innerText = jsonResult.organizador
+                document.getElementById("descriptionParagraph").innerText = jsonResult.descripcion
+            } else {
+                document.getElementById("nameMeetingInput").value = jsonResult.nombre
+                document.getElementById("importanceInput").value = jsonResult.importancia
+                document.getElementById("descriptionInput").value = jsonResult.descripcion
             }
             
-            htmlResult = `<div class="form-group" style="margin-top: 20px">
-                                    <label for="full_name_id" class="control-label">Nombre de Meeting</label>
-                                    <div class="col-md-8">
-                                        <label>${jsonResult.nombre}</label>
-                                    </div>
-                                </div>
+            dates = jsonResult.horarios_propuestos
+            people = jsonResult.integrantes 
 
-                                <div class="row" style="margin-top: 20px">
-                                    <div class="col-md-5 form-group ">
-                                        <label for="full_name_id" class="control-label">Fecha de Meeting</label>
-                                        <div class="col-md-10" style="padding:10px">
-                                            <input id="datepicker" width="276" value="${dateResult}" disabled=true/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5 form-group">
-                                        <label for="full_name_id" class="control-label">Horario de Meeting</label>
-                                        <div class="col-md-10" style="padding:10px">
-                                            <input id="timepicker" width="276" value="${timeResult}" disabled=true/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="margin-top: 10px">`
-            jsonResult.horarios_propuestos.forEach(item =>{
-                htmlResult += `<div class="col-md-8">
-                    <i class="fas fa-calendar-day"></i>
-                    <label>${item}</label>
-                </div>`
-            })
-            htmlResult +=`      
-                                </div>
-                                <div class="form-group" style="margin-top: 20px">
-                                    <label for="full_name_id" class="control-label">Importancia</label>
-                                    <div class="col-md-8">
-                                        <label>${jsonResult.importancia}</label>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="margin-top: 20px">
-                                    <label for="full_name_id" class="control-label">Organizador</label>
-                                    <div class="col-md-8">
-                                        <label>${jsonResult.organizador}</label>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="margin-top: 20px">
-                                    <label for="full_name_id" class="control-label">Participantes</label>
-                                    <div style="margin-top: 10px">`
-            jsonResult.integrantes.forEach(item => {
-                htmlResult += `<div class="col-md-8">
-                    <i class="fa fa-user bigicon"></i>
-                    <label>${item}</label>
-                </div>`
-            })
-            htmlResult +=`          </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="full_name_id" class="control-label">Descripción</label>
-                                    <div class="col-md-8">
-                                        <p>
-                                            ${jsonResult.descripcion}
-                                        </p>
-                                    </div>
-                                </div>`
-            document.getElementById("beginDetailMeetins").innerHTML = htmlResult
+            drawParticipants(type)
+            drawProposals(type)
         }
     }
-    console.log("jajaja")
+}
+
+function drawParticipants (type) {
+    textHTML = ''
+    people.forEach(item => {
+        textHTML += `<div class="row">
+            <div class="col-md-3">
+                <i class="fa fa-user bigicon"></i>
+                <label>${item}</label>
+            </div>`
+        if (type === 'edit') {
+            textHTML += `<div class="col-md-1">
+                <i class="fas fa-minus-circle" onclick="removeParticipant(${item})"></i>
+            </div>`
+        }
+        textHTML += `</div>`
+        document.getElementById("participantsDiv").innerHTML = textHTML
+    })
+}
+
+function drawProposals (type) {
+    textHTML = ""
+    dates.forEach(item =>{
+        console.log(item)
+        textHTML += `<div class="row">
+                    <div class="col-md-3">
+                        <i class="fas fa-calendar-day"></i>
+                        <label>${item}</label>
+                    </div>`
+        if (type === 'edit') {
+            textHTML += `<div class="col-md-1">
+                        <i class="fas fa-minus-circle" onclick="removeProposal('${item}')"></i>
+                    </div>`
+        }
+        textHTML += `</div>`
+        document.getElementById("proposalsDivs").innerHTML = textHTML
+    })
+}
+
+function removeParticipant (itemToRemove) {
+    people = people.filter(function (item) {
+        console.log(item !== itemToRemove)
+        return item !== itemToRemove;
+    });
+    drawParticipants('edit')
+}
+
+function removeProposal (itemToRemove) {
+    dates = dates.filter(function (item) {
+        return item !== itemToRemove;
+    });
+    drawProposals('edit')
 }
 
 function getMeetings () {
@@ -258,12 +269,21 @@ function addDate () {
     let date = document.querySelector('#datepicker').value
     let time = document.querySelector('#timepicker').value
     let resultDate = new Date(date+ ' ' + time + ':00')
+
+    let found = dates.find( function (item) {
+        return item.toString() === resultDate.toString()
+    })
+    if (found) {
+        alert("Esta fecha ya se encuentra añadida")
+        return
+    }
+
     dates.push(resultDate)
     let htmlDates = ''
     dates.forEach(item =>{
         htmlDates += `<div class="col-md-8">
             <i class="fas fa-calendar-day"></i>
-            <label>${item}</label>
+            <label>${item.toLocaleString()}</label>
         </div>`
     })
     document.getElementById("beginDates").innerHTML = htmlDates
@@ -281,8 +301,16 @@ function addPerson () {
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         } else {
-            console.log(JSON.parse(xhr.response)[0])
+            console.log(JSON.parse(xhr.response)[0].id)
+            console.log(people)
             let personId = JSON.parse(xhr.response)[0].id
+            let found = people.find( function (item) {
+                return item === personId
+            })
+            if (found) {
+                alert("Este usuario ya se encuentra añadido")
+                return
+            }
             usersnames.push(username)
             people.push(personId)
             let htmlUsers = ''
