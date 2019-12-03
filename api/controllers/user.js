@@ -86,7 +86,7 @@ function getUsersPage(req, res){
 }
 
 function getUserById(req,res){
-    var userId = req.params.id;
+    let userId = req.params.id;
     User.findById(userId,(err,user) => {
         if(err){
             res.status(500).send({message: 'Server error.'});
@@ -101,7 +101,7 @@ function getUserById(req,res){
 }
 
 function getUserByEmail(req,res){
-    var userEmail = req.params.email;
+    let userEmail = req.params.email;
     User.find({email: userEmail},(err,user) => {
         if(err){
             res.status(500).send({message: 'Server error.'});
@@ -127,7 +127,7 @@ function updateUser(req, res){
             if(!updatedUser){
                 res.status(404).send({message: 'Could not update the user.'});
             }else{
-                res.status(200).send({message:'User obtained', result : updatedUser})
+                res.status(200).send({message:'User updated', result : updatedUser})
             }
         }
     });
