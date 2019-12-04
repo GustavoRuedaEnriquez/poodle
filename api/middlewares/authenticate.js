@@ -17,12 +17,11 @@ exports.ensureAuth = function(req, res, next){
                 message: 'Token has expired.'
             });
         }
+        req.user = payload;
     }catch(ex){
         return res.status(404).send({
             message: 'Not valid token.'
         });
     }
-
-    req.user = payload;
     next();
 }

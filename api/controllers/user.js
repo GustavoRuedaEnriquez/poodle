@@ -6,6 +6,10 @@ const jwt = require('../services/jwt');
 let User = require('../models/user');
 
 function login(req, res){
+
+    console.log("Received.")
+    console.log(req.body)
+
     let correo = req.body.email;
     let password = req.body.password;
 
@@ -20,12 +24,13 @@ function login(req, res){
         if(err){
             res.status(500).send({message: 'Server error.'});
         } else {
-            if(Object.entries(user).length === 0){
+            if(! user){
+                console.log("Not found")
                 res.status(404).send({message: 'User not found.'});
             } else {
                 if(password == user.password){
                     let token = jwt.createToken(user);
-                    res.status(200).send({message: 'Logged in', token : token});
+                    res.status(200).send({message: 'Logged in', token : token, User : user});
                 } else {
                     res.status(403).send({message: 'Invalid password'});
                 }
