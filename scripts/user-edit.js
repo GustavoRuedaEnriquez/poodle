@@ -4,6 +4,9 @@ let saveBtn = document.querySelector("#saveBtn");
 saveBtn.addEventListener("click",updateUserInfo);
 
 function updateUserInfo(e) {
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    let email = user.email;
+
     let first_name = document.getElementById("first_name").value;
     let last_name = document.getElementById("last_name").value;
     let username = document.getElementById("username").value;
@@ -26,25 +29,26 @@ function updateUserInfo(e) {
     })
 
     let xhr = new XMLHttpRequest();
-    /* Temporal part */
-    xhr.open('PATCH', 'http://localhost:3000/users/1');
-    /*****************/
+
+    xhr.open('PATCH', 'http://127.0.0.1:3000/api/user/' + email);
+
     xhr.setRequestHeader('content-type','application/json');
+    xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"));
+
     xhr.send(str);
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido.");
         }else{
+            let response = JSON.parse(xhr.responseText);
+            sessionStorage.setItem("user",JSON.stringify(response.result));
             location.href = 'user.html';
         }
     }
 
 }
 
-function writeUserInfo() {
-    /* Temporal part */
-    let usr = users.find((item) => item.id = 1);
-    /*****************/
+function writeUserInfo(usr) {
     if(usr != undefined) {
         document.getElementById("name_title").innerText = usr.nombre + ' ' + usr.apellido;
         document.getElementById("first_name").value = usr.nombre;
@@ -60,17 +64,9 @@ function writeUserInfo() {
 }
 
 function init(){
-    xhr = new XMLHttpRequest();
-    xhr.open('GET','http://localhost:3000/users');
-    xhr.send()
-    xhr.onload = function (){
-        if(xhr.status != 200){
-            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido");
-        }else{
-            users = JSON.parse(xhr.response);
-            writeUserInfo();
-        }
-    }
+    let token = sessionStorage.getItem("token");
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    writeUserInfo(user);
 }
 
 init();
