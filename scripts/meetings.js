@@ -174,7 +174,7 @@ function drawParticipants (type) {
 
 function drawProposals (type) {
     textHTML = ''
-    dates.forEach(item =>{
+    dates.forEach(item => {
         console.log(item)
         textHTML += `<div class="row">
                     <div class="col-md-3">
@@ -187,11 +187,19 @@ function drawProposals (type) {
                     </div>`
         } else if (type === 'detail') {
             textHTML += `<div class="col-md-1">
-                            <input type="checkbox" name="${item._id}" value="${item._id}" onchange="checkboxEventHandler('${item}')">
+                            <input type="checkbox" name="${item.date}" value="${item.date}" id="${item.date}" onchange="checkboxEventHandler('${item.date}')" `
+            let found = item.voters.find(function (item) {
+                return item._id === currentUser._id
+            })
+            if (found) {
+                textHTML += `checked` 
+            }
+            textHTML += `>
                     </div>`
         }
         textHTML += `</div>`
     })
+
     document.getElementById("proposalsDivs").innerHTML = textHTML
 }
 
@@ -354,33 +362,55 @@ function addPerson () {
 
 function checkboxEventHandler(proposalVote) {
     inputChk = document.getElementById(proposalVote).checked
+    proposalVote = new Date(proposalVote)
     //currentUser
+    console.log(inputChk)
     if (inputChk) {
         dates.forEach(item => {
-            if (item._id === proposalVote) {
-                item.voters = item.voters.find(function (item) {
+            if (item.date.toLocaleString() === proposalVote.toLocaleString()) {
+                let found = item.voters.find(function (item) {
+                    return item._id === currentUser._id
+                })
+                if (!found) {
+                    item.voters.push(currentUser)
                     item.votes++
-                    return item._id === proposalVote
-                });
+                }
             } 
-            if (!found) {
-                proposal.push(currentUser)
-            }
         })
     } else {
         dates.forEach(item => {
-            if (item._id === proposalVote) {
+            if (item.date.toLocaleString() === proposalVote.toLocaleString()) {
                 item.voters = item.voters.filter(function (item) {
                     // checar si es el usuario o quien
-                    item.votes--
-                    return item._id !== currentUser._id;
+                    if (item._id !== currentUser._id) {
+                        item.votes--
+                        return true
+                    } 
+                    return false
                 });
             }
         })
     }
-
+    updateProposals()
+    console.log(dates)
 }
 
 function updateProposals () {
+    console.log('foo')
+    let resultJson = JSON.stringify({
+        'schedule_proposals': dates
+    })
 
+    let xhr = new XMLHttpRequest()
+    xhr.open('PATCH','http://localhost:3000/api/meeting/' + idMeeting)
+
+    xhr.setRequestHeader('Content-type','application/json')
+    xhr.send(resultJson)
+    
+    xhr.onload = function(){
+        if(xhr.status != 200){
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
+        }else{
+        }
+    }
 }
