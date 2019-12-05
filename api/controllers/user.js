@@ -6,10 +6,6 @@ const jwt = require('../services/jwt');
 let User = require('../models/user');
 
 function login(req, res){
-
-    console.log("Received.")
-    console.log(req.body)
-
     let correo = req.body.email;
     let password = req.body.password;
 
@@ -22,6 +18,7 @@ function login(req, res){
 
     User.findOne({email: correo},(err,user) => {
         if(err){
+            console.log(err);
             res.status(500).send({message: 'Server error.'});
         } else {
             if(! user){
@@ -40,6 +37,7 @@ function login(req, res){
 }
 
 function addUser(req, res){    
+
     let user = new User();
     let params = req.body;
     user.username = params.username;
@@ -47,10 +45,12 @@ function addUser(req, res){
     user.nombre = params.nombre;
     user.apellido = params.apellido;
     user.date = moment();
+    
     user.position = params.position;
     user.password = params.password;
     user.save((err, storedUser) => {
         if(err){
+            console.log(err);
             res.status(500).send({mesage:'Server error.'});
         } else {
             if(!storedUser){
@@ -65,6 +65,7 @@ function addUser(req, res){
 function getUsers(req, res){
     User.find({},(err, users) => {
         if(err){
+            console.log(err);
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(users).length === 0){
@@ -79,6 +80,7 @@ function getUsers(req, res){
 function getUsersPage(req, res){
     User.find({skip: req.skip, limit: req.limit},(err, users) => {
         if(err){
+            console.log(err);
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(users).length === 0){
@@ -94,6 +96,7 @@ function getUserById(req,res){
     let userId = req.params.id;
     User.findById(userId,(err,user) => {
         if(err){
+            console.log(err);
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(user).length === 0){
@@ -109,6 +112,7 @@ function getUserByEmail(req,res){
     let userEmail = req.params.email;
     User.find({email: userEmail},(err,user) => {
         if(err){
+            console.log(err);
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(user).length === 0){
@@ -127,6 +131,7 @@ function updateUser(req, res){
 
     User.findOneAndUpdate({email: userEmail}, update, {new:true}, (err,updatedUser) =>{
         if(err){
+            console.log(err);
             res.status(500).send({message: 'Server error.'});
         }else{
             if(!updatedUser){
