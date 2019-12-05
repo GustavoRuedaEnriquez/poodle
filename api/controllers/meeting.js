@@ -27,7 +27,7 @@ function addMeeting(req, res){
     meeting.date = params.date;
     meeting.importance = params.importance;
     meeting.organizer = params.organizer;
-    meeting.schedule_proposal = (params.schedule_proposal == undefined) ? [] : params.schedule_proposal;
+    meeting.schedule_proposals = (params.schedule_proposals == undefined) ? [] : params.schedule_proposals;
 
     meeting.save((err, storedMeeting) => {
         if(err){

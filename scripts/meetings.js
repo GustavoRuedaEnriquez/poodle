@@ -29,15 +29,8 @@ function constructMeeting () {
 }
 
 function createMeeting (e) {
-    console.log("foo")
     
     resultJson = constructMeeting()
-    
-    if (!(resultJson.name && resultJson.description && resultJson.importance)) {
-        alert("Faltan datos")
-        return
-    }
-
     console.log(resultJson)
     
     if (!resultJson) return
@@ -139,7 +132,7 @@ function getMeetingDataById (id, type) {
             if (type === 'detail') {
                 document.getElementById("nameMeetingLabel").innerText = jsonResult.name
                 document.getElementById("importanceLabel").innerText = jsonResult.importance
-                document.getElementById("organizerLabel").innerText = jsonResult.organizer
+                document.getElementById("organizerLabel").innerText = jsonResult.organizer.username
                 document.getElementById("descriptionParagraph").innerText = jsonResult.description
             } else {
                 document.getElementById("nameMeetingInput").value = jsonResult.name
