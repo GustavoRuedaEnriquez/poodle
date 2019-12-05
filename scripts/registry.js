@@ -1,9 +1,9 @@
 let users = [];
 
 let registerBtn = document.getElementById("registerBtn");
-registerBtn.addEventListener("submit", register);
+registerBtn.addEventListener("click", register);
 
-function register(e) {
+function register(event) {
     
     let firstname = document.getElementById("firstname").value;
     let lastname = document.getElementById("lastname").value;
@@ -14,45 +14,36 @@ function register(e) {
     let password_check = document.getElementById("password_check").value;
     let password_input = document.getElementById("password_check");
 
-    e.preventDefault();
-
     if(password != password_check) {
         password_input.setCustomValidity("Las contraseñas no son iguales.");
         return;
     }
+    
+    event.preventDefault();
 
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-
-    //Temporal id
     let str = JSON.stringify({
-            "id": 3,
             "nombre": firstname,
             "apellido": lastname,
             "username": username,
             "email": email,
             "password": password,
-            "ingreso": today,
-            "puesto": position,
-            "imagen": "",
+            "position": position,
+            "image" : "https://www.wataniya.com.sa/wp-content/uploads/2017/01/empty_person.jpg",
             "actual": 0,
             "pending": 0,
             "assisted": 0
     });
 
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:3000/users/');
+    xhr.open('POST', 'http://127.0.0.1:3000/api/user');
     xhr.setRequestHeader('content-type','application/json');
     xhr.send(str);
     xhr.onload = function(){
-        if(xhr.status != 200){
+        if(xhr.status != 201){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido.");
         }else{
             alert(xhr.status+ ': '+ xhr.statusText + "/n Creado.");
-            //location.reload();
+            location.href = 'login.html';
         }
     }
 

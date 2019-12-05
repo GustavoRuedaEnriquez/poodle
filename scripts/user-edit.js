@@ -13,6 +13,7 @@ function updateUserInfo(e) {
     let password = document.getElementById("password").value;
     let password2 = document.getElementById("password2").value;
     let password_validation = document.getElementById("password2");
+    let url =   document.getElementById("url-input").value;
 
     if(password != password2) {
         password_validation.setCustomValidity("Las contraseñas no son iguales.");
@@ -25,7 +26,8 @@ function updateUserInfo(e) {
         'nombre' : first_name,
         'apellido' : last_name,
         'username' : username,
-        'password' : password
+        'password' : password,
+        'image': url
     })
 
     let xhr = new XMLHttpRequest();
@@ -55,9 +57,11 @@ function writeUserInfo(usr) {
         document.getElementById("last_name").value = usr.apellido;
         document.getElementById("username").value = usr.username;
         document.getElementById("password").value = usr.password;
+        document.getElementById("avatar-image").src = usr.image;
         document.getElementById("actual").innerHTML = `<span class="pull-left"><strong>Actuales</strong></span> ${usr.actual}`;
         document.getElementById("pending").innerHTML = `<span class="pull-left"><strong>Pendientes</strong></span> ${usr.pending}`;
         document.getElementById("assisted").innerHTML = `<span class="pull-left"><strong>Asistidas</strong></span> ${usr.assisted}`;
+        document.getElementById("url-input").value = usr.image;
     } else {
         alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido");
     }

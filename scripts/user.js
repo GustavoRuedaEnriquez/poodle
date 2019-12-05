@@ -7,6 +7,7 @@ function writeUserInfo(usr) {
         document.getElementById("last_name").value = usr.apellido;
         document.getElementById("email").value = usr.email;
         document.getElementById("username").value = usr.username;
+        document.getElementById("avatar-image").src = usr.image;
         document.getElementById("actual").innerHTML = `<span class="pull-left"><strong>Actuales</strong></span> ${usr.actual}`;
         document.getElementById("pending").innerHTML = `<span class="pull-left"><strong>Pendientes</strong></span> ${usr.pending}`;
         document.getElementById("assisted").innerHTML = `<span class="pull-left"><strong>Asistidas</strong></span> ${usr.assisted}`;
