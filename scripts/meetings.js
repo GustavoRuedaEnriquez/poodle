@@ -2,6 +2,7 @@ let dates = []
 let people = []
 let usersnames = []
 let currentUser = JSON.parse(sessionStorage.getItem("user"))
+people.push(currentUser)
 let meeting
 let finalDate = ""
 
@@ -122,10 +123,10 @@ function getMeetingDataById (id, type) {
             let dateResult = ""
             let timeResult = ""
             if(jsonResult.date) {
-                let auxDate = new Date(jsonResult.date)
-                console.log(auxDate.toLocaleString())
-                dateResult = auxDate.toLocaleString().split(' ')[0]
-                timeResult = auxDate.toLocaleString().split(' ')[1]
+                jsonResult.date = new Date(jsonResult.date)
+                console.log(jsonResult.date.toLocaleString())
+                dateResult = jsonResult.date.toLocaleString().split(' ')[0]
+                timeResult = jsonResult.date.toLocaleString().split(' ')[1]
             }
             document.getElementById("datepicker").value = dateResult
             document.getElementById("timepicker").value = timeResult
@@ -139,7 +140,10 @@ function getMeetingDataById (id, type) {
                 document.getElementById("importanceInput").value = jsonResult.importance
                 document.getElementById("descriptionInput").value = jsonResult.description
             }
-            
+            jsonResult.schedule_proposals.map(item => {
+                item.date = new Date(item.date)
+                return item
+            })
             dates = jsonResult.schedule_proposals
             people = jsonResult.participants 
 
@@ -158,7 +162,7 @@ function drawParticipants (type) {
                 <i class="fa fa-user bigicon"></i>
                 <label>${item.username}</label>
             </div>`
-        if (type === 'edit') {
+        if (type === 'edit' && item.username !== currentUser.username) {
             textHTML += `<div class="col-md-1">
                 <i class="fas fa-minus-circle" onclick="removeParticipant('${item._id}')"></i>
             </div>`
