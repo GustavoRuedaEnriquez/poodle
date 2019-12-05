@@ -21,7 +21,7 @@ let meetingSchema = mongoose.Schema({
     },
     date:{
         type: Date,
-        required: true
+        required: false
     },
     importance:{
         type: String,

@@ -1,6 +1,7 @@
 'use strict'
 
 let Meeting = require('../models/meeting');
+let Proposal = require('../models/proposal');
 
 function addMeeting(req, res){
     let meeting = new Meeting();
@@ -31,8 +32,9 @@ function addMeeting(req, res){
     meeting.save((err, storedMeeting) => {
         if(err){
             res.status(500).send({mesage:'Server error.'});
+            console.log(err)
         } else {
-            if(!storedUser){
+            if(!storedMeeting){
                 res.status(404).send({message:'Error while saving.'});
             } else {
                 res.status(201).send({message:'Meeting stored', meeting : storedMeeting});
@@ -46,7 +48,21 @@ function getMeetings(req,res){
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
-            if(Object.entries(proposals).length === 0){
+            if(Object.entries(Proposal).length === 0){
+                res.status(404).send({message: 'No meetings found.'});
+            }else{
+                res.status(200).send({message:'Meetings obtained', results : meetings});
+            }
+        }
+    });
+}
+
+function getMeetingsByUserId(req,res){
+    Meeting.find({},(err, meetings) => {
+        if(err){
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(Object.entries(Proposal).length === 0){
                 res.status(404).send({message: 'No meetings found.'});
             }else{
                 res.status(200).send({message:'Meetings obtained', results : meetings});

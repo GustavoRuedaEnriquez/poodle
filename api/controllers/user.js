@@ -100,6 +100,21 @@ function getUserById(req,res){
     });
 }
 
+function getUserByUsername(req,res){
+    let username = req.params.username;
+    User.find({username: username},(err,user) => {
+        if(err){
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(Object.entries(user).length === 0){
+                res.status(404).send({message: 'User not found.'});
+            }else{
+                res.status(200).send({message:'User obtained', result : user});
+            }
+        }
+    });
+}
+
 function getUserByEmail(req,res){
     let userEmail = req.params.email;
     User.find({email: userEmail},(err,user) => {
@@ -140,5 +155,6 @@ module.exports = {
     getUsersPage,
     getUserById,
     getUserByEmail,
-    updateUser
+    updateUser, 
+    getUserByUsername
 };
