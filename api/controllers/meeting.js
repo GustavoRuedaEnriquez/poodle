@@ -57,6 +57,22 @@ function getMeetings(req,res){
 
 function getMeetingById(req,res){
     let meetingId = req.params.id;
+    console.log(req)
+    Meeting.findById(meetingId,(err,proposal) => {
+        if(err){
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(Object.entries(proposal).length === 0){
+                res.status(404).send({message: 'Meeting not found.'});
+            }else{
+                res.status(200).send({message:'Meeting obtained', result : proposal});
+            }
+        }
+    });
+}
+
+function updateMeetingById(req,res){
+    let meetingId = req.params.id;
     Meeting.findById(meetingId,(err,proposal) => {
         if(err){
             res.status(500).send({message: 'Server error.'});
@@ -73,5 +89,6 @@ function getMeetingById(req,res){
 module.exports = {
     addMeeting,
     getMeetings,
-    getMeetingById
+    getMeetingById,
+    updateMeetingById
 }
