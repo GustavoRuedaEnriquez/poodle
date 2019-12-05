@@ -414,7 +414,6 @@
                         alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
                     }else{
                       let resultJsonMeetings = JSON.parse(xhr.response).results
-                      console.log(resultJsonMeetings)
                       this.draw(resultJsonMeetings)
                     }
                 }
@@ -451,8 +450,6 @@
                     dateString = '' + day + '/' + this.month.format('MM/YYYY')
                     let existMeetingInDate = resultJsonMeetings.filter(function (item) {
                       let auxDateItem = new Date(item.date)
-                      console.log((auxDateItem.getDate() + '/' + auxDateItem.getMonth() + '/' + auxDateItem.getFullYear()))
-                      console.log(dateString)
                       return (auxDateItem.getDate() + '/' + auxDateItem.getMonth() + '/' + auxDateItem.getFullYear()) === dateString
                     })
                     let auxData = []
@@ -506,13 +503,10 @@
                 let existMeetingInDate = resultJsonMeetings.filter(function (item) {
                   if (!(item.date)) return false 
                   let auxDateItem = new Date(item.date)
-                      console.log(auxDateItem.getDate() + '/' + (auxDateItem.getMonth()+1) + '/' )
-                      console.log(dateString)
                   return (auxDateItem.getDate() + '/' + (auxDateItem.getMonth()+1) + '/' + auxDateItem.getFullYear()) === dateString
                 })
                 let auxData = []
                 if (existMeetingInDate) {
-                  console.log(existMeetingInDate)
                   existMeetingInDate.forEach(item => {
                     let auxItem = new Date(item.date)
                     auxData.push('' + auxItem.getHours() + ':' + auxItem.getMinutes() + ' - ' + item.name.substring(0,7))
