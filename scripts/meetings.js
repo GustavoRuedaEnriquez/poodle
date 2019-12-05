@@ -91,9 +91,9 @@ function detailAllMeeting (userId) {
                 let dateDay = 'Sin Definir'
                 let dateTime = 'Sin Definir'
                 if (item.date) {
-                    auxDate = new Date(item.fecha)
+                    auxDate = new Date(item.date)
                     dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
-                    dateTime = auxDate.getTime()
+                    dateTime = auxDate.getHours() + ':' + auxDate.getMinutes()
                 }
                 htmlMeetings += `<tr>
                         <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
