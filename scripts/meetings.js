@@ -130,6 +130,7 @@ function getMeetingDataById (id, type) {
             let timeResult = ""
             if(jsonResult.date) {
                 let auxDate = new Date(jsonResult.date)
+                console.log(auxDate.toLocaleString())
                 dateResult = auxDate.toLocaleString().split(' ')[0]
                 timeResult = auxDate.toLocaleString().split(' ')[1]
             }
