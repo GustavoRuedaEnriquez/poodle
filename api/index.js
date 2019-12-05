@@ -13,7 +13,7 @@ mongoose.connect(config.DB_URL, {
         console.log("\n\n**** Conection with DB established ****\n");
         
         app.listen(PORT,()=>{
-            console.log("**** Local Server created in http:/127.0.0.1:" + PORT + "****\n")
+            console.log("**** Local Server created in http://127.0.0.1:" + PORT + "****\n")
         });
     })
     .catch(err => console.log(err));

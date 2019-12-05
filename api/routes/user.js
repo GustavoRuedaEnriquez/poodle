@@ -2,6 +2,7 @@
 
 const express = require('express');
 const UserController = require('../controllers/user');
+const mdAuth = require('../middlewares/authenticate');
 
 let api = express.Router();
 
@@ -10,6 +11,6 @@ api.post('/user', UserController.addUser);
 api.get('/users',UserController.getUsers);
 api.get('/user/:id',UserController.getUserById);
 api.get('/user/username/:username',UserController.getUserByUsername);
-api.patch('/user/:email',UserController.updateUser);
+api.patch('/user/:email',mdAuth.ensureAuth,UserController.updateUser);
 
 module.exports = api;
