@@ -8,6 +8,7 @@ let api = express.Router();
 api.post('/meeting',MeetingController.addMeeting);
 api.get('/meetings',MeetingController.getMeetings);
 api.get('/meeting/:id',MeetingController.getMeetingById);
+api.get('/meetings/user/:email',MeetingController.getMeetingsByUser);
 api.put('/meeting/:id',MeetingController.updateMeetingById);
 
 module.exports = api;

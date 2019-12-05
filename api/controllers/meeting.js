@@ -48,7 +48,7 @@ function getMeetings(req,res){
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
-            if(Object.entries(Proposal).length === 0){
+            if(Object.entries(meetings).length === 0){
                 res.status(404).send({message: 'No meetings found.'});
             }else{
                 res.status(200).send({message:'Meetings obtained', results : meetings});
@@ -101,9 +101,33 @@ function updateMeetingById(req,res){
     });
 }
 
+function getMeetingsByUser(req,res){
+    let email = req.params.email;
+    Meeting.find({$or:[{'participants.email':{$eq:email}},{'organizer.email':{$eq:email}}]}).lean(true).exec((err, meetings) => {
+        if(err){
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(Object.entries(meetings).length === 0){
+                res.status(404).send({message: 'User has no meetings.'});
+            }else{
+                for(let i in meetings) {
+                    if(meetings[i].organizer.email == email) {
+                        meetings[i].role = "Organizer";
+                    } else {
+                        meetings[i].role = "Participant";
+                    }
+                }
+                res.status(200).send({message:'Meetings obtained', results : meetings});
+            }
+        }
+    });
+}
+
+
 module.exports = {
     addMeeting,
     getMeetings,
     getMeetingById,
-    updateMeetingById
+    updateMeetingById,
+    getMeetingsByUser
 }
