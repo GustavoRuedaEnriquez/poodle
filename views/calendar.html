@@ -406,8 +406,18 @@
                 }
                 
                 this.monthString = this.month.clone().format('MMMM YYYY')
-                
-                this.draw()
+                let xhr = new XMLHttpRequest()
+                xhr.open('GET','http://localhost:3000/api/meetings')
+                xhr.send()
+                xhr.onload = () => {
+                    if(xhr.status != 200){
+                        alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
+                    }else{
+                      let resultJsonMeetings = JSON.parse(xhr.response).results
+                      console.log(resultJsonMeetings)
+                      this.draw(resultJsonMeetings)
+                    }
+                }
             }
             
             addMonth () {
@@ -430,63 +440,89 @@
               this.bodyDivs[index].setAttribute("value",day)
             }
 
-            draw () {
-                this.monthDiv.innerText = this.monthString
-                let dateString = ''
-                let index = 0
+            draw (resultJsonMeetings) {
+              this.monthDiv.innerText = this.monthString
+              let dateString = ''
+              let index = 0
 
-                if (this.calendarDays.first > 1) {
-                  for (let day = this.calendarDays.first; day <= this.monthDays.lastPrevious; index ++) {
-                      //this.bodyDivs[index].innerText = day++
-                      dateString = '' + this.month.format('YYYY-MM') + '-' + day
+              if (this.calendarDays.first > 1) {
+                for (let day = this.calendarDays.first; day <= this.monthDays.lastPrevious; index ++) {
+                    //this.bodyDivs[index].innerText = day++
+                    dateString = '' + day + '/' + this.month.format('MM/YYYY')
+                    let existMeetingInDate = resultJsonMeetings.filter(function (item) {
+                      let auxDateItem = new Date(item.date)
+                      console.log((auxDateItem.getDate() + '/' + auxDateItem.getMonth() + '/' + auxDateItem.getFullYear()))
                       console.log(dateString)
-                      // request para obtener datos de dicha fecha
-                      this.drawDay(index, day, ['data jaja', 'data2 jaja'])
-                      day++
-                      
+                      return (auxDateItem.getDate() + '/' + auxDateItem.getMonth() + '/' + auxDateItem.getFullYear()) === dateString
+                    })
+                    let auxData = []
+                    if (existMeetingInDate) {
+                      existMeetingInDate.forEach(item => {
+                        auxData.push('' + item.date.getHours() + ':' + item.date.getMinutes() + item.name.substring(0,7))
+                      })
+                    }
+                    // request para obtener datos de dicha fecha
+                    this.drawDay(index, day, auxData)
+                    day++
+                    
 
-                      this.cleanCssClasses(false, index)
+                    this.cleanCssClasses(false, index)
 
-                      this.bodyDivs[index].classList.add('cal-day__month--previous')
-                  } 
+                    this.bodyDivs[index].classList.add('cal-day__month--previous')
+                } 
+              }
+
+              let isNextMonth = false
+              for (let day = 1; index <= this.bodyDivs.length - 1; index ++) {
+                if (day > this.monthDays.lastCurrent) {
+                    day = 1
+                    isNextMonth = true
                 }
 
-                let isNextMonth = false
-                for (let day = 1; index <= this.bodyDivs.length - 1; index ++) {
-                  if (day > this.monthDays.lastCurrent) {
-                      day = 1
-                      isNextMonth = true
-                  }
+                this.cleanCssClasses(true, index)
 
-                  this.cleanCssClasses(true, index)
+                if (!isNextMonth) {
+                    if (day === this.today.date() && this.today.isSame(this.month, 'day')) {
+                    this.bodyDivs[index].classList.add('cal-day__day--today') 
+                    }
 
-                  if (!isNextMonth) {
-                      if (day === this.today.date() && this.today.isSame(this.month, 'day')) {
-                      this.bodyDivs[index].classList.add('cal-day__day--today') 
-                      }
+                    if (day === this.selected.date() && this.selected.isSame(this.month, 'month')) {
+                    this.bodyDivs[index].classList.add('cal-day__day--selected') 
+                    }
 
-                      if (day === this.selected.date() && this.selected.isSame(this.month, 'month')) {
-                      this.bodyDivs[index].classList.add('cal-day__day--selected') 
-                      }
-
-                      this.bodyDivs[index].classList.add('cal-day__month--current')
-                      dateString = '' + this.month.format('YYYY') + '-' + this.month.format('MM') + '-' + day
-                  } else {
-                      this.bodyDivs[index].classList.add('cal-day__month--next')
-                      if (this.month._d.getMonth() === 11) {
-                        dateString = '' + this.month.format('YYYY') + '-' + '01' + '-' + day
-                      } else {
-                        dateString = '' + this.month.format('YYYY') + '-' + (this.month._d.getMonth()+2) + '-' + day
-                      }
-                      
-                  }
-
-                  //this.bodyDivs[index].innerText = day++
-                  console.log(dateString)
-                  // request para obtener datos de dicha fecha
-                  this.drawDay(index, day, ['mas datos jaja', 'mas datax2 jaja'])
-                  day++
+                    this.bodyDivs[index].classList.add('cal-day__month--current')
+                    dateString = '' + day + '/' + (this.month.format('MM') ) + '/' + this.month.format('YYYY')
+                } else {
+                    this.bodyDivs[index].classList.add('cal-day__month--next')
+                    if (this.month._d.getMonth() === 11) {
+                      dateString = '' + day + '/' + '01' + '/' + this.month.format('YYYY')
+                    } else {
+                      dateString = '' + day+ '/' + (this.month._d.getMonth() + 2) + '/' + this.month.format('YYYY') 
+                    }
+                    
                 }
+                
+                //this.bodyDivs[index].innerText = day++dateString = '' + day + '/' + this.month.format('MM/YYYY')
+                let existMeetingInDate = resultJsonMeetings.filter(function (item) {
+                  if (!(item.date)) return false 
+                  let auxDateItem = new Date(item.date)
+                      console.log(auxDateItem.getDate() + '/' + (auxDateItem.getMonth()+1) + '/' )
+                      console.log(dateString)
+                  return (auxDateItem.getDate() + '/' + (auxDateItem.getMonth()+1) + '/' + auxDateItem.getFullYear()) === dateString
+                })
+                let auxData = []
+                if (existMeetingInDate) {
+                  console.log(existMeetingInDate)
+                  existMeetingInDate.forEach(item => {
+                    let auxItem = new Date(item.date)
+                    auxData.push('' + auxItem.getHours() + ':' + auxItem.getMinutes() + ' - ' + item.name.substring(0,7))
+                  })
+                }
+                // request para obtener datos de dicha fecha
+                this.drawDay(index, day, auxData)
+                day++
+              
+              }
             }
             
             cleanCssClasses (selected, index) {

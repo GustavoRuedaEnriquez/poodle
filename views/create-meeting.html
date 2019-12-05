@@ -136,7 +136,7 @@
                                 <div class="form-group" style="margin-top: 20px">
                                     <label for="full_name_id" class="control-label">Nombre de Meeting</label>
                                     <div class="col-md-8">
-                                        <input id="fname" name="name" type="text" placeholder="Nombre de Meeting"
+                                        <input id="nameMeetingInput" name="name" type="text" placeholder="Nombre de Meeting"
                                             class="form-control">
                                     </div>
                                 </div>
@@ -145,13 +145,13 @@
                                     <div class="col-md-5 form-group ">
                                         <label class="control-label">Fecha de Meeting</label>
                                         <div class="col-md-10" style="padding:10px">
-                                            <input id="datepicker" width="276" />
+                                            <input id="datepicker" width="100%" />
                                         </div>
                                     </div>
                                     <div class="col-md-5 form-group">
                                         <label for="full_name_id" class="control-label">Horario de Meeting</label>
                                         <div class="col-md-10" style="padding:10px">
-                                            <input id="timepicker" width="276" />
+                                            <input id="timepicker" width="100%" />
                                         </div>
                                     </div>
                                     <div class="col-md-1" style="align-self: center; text-align: center;">
@@ -159,7 +159,7 @@
                                     </div>
                                 </div>
                                 <div style="margin-top: 10px">
-                                        <div id="beginDates"></div>
+                                        <div id="proposalsDivs"></div>
                                     <!-- <div class="col-md-8">
                                         <i class="fas fa-calendar-day"></i>
                                         <label>12/12/2020 12:00 pm</label>
@@ -173,7 +173,7 @@
                                     <label for="full_name_id" class="control-label">Importancia</label>
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <select id="importance" class="form-control" >
+                                            <select id="importanceInput" class="form-control" >
                                                 <option value="Opcional">Opcional</option>
                                                 <option value="Casual">Casual</option>
                                                 <option value="Intermedia">Intermedia</option>
@@ -195,7 +195,7 @@
                                         </div>
                                     </div>
                                     <div style="margin-top: 10px">
-                                        <div id="beginUsers"></div>
+                                        <div id="participantsDiv"></div>
                                         <!-- <div class="col-md-8">
                                             <i class="fa fa-user bigicon"></i>
                                             <label>sbriones97@hotmail.com</label>
@@ -210,7 +210,7 @@
                                 <div class="form-group">
                                     <label for="full_name_id" class="control-label">Descripción</label>
                                     <div class="col-md-8">
-                                        <textarea class="form-control" id="description" name="description"
+                                        <textarea class="form-control" id="descriptionInput" name="description"
                                             placeholder="Agrega una descripción" rows="7"></textarea>
                                     </div>
                                 </div>
