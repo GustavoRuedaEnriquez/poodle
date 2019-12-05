@@ -12,7 +12,7 @@ let meetingSchema = mongoose.Schema({
         required: true,
     },
     participants_number:{
-        type: Array,
+        type: Number,
         required: true
     },
     participants:{
@@ -24,16 +24,16 @@ let meetingSchema = mongoose.Schema({
         required: true
     },
     importance:{
-        type: Number,
+        type: String,
         required: true
     },
     organizer:{
-        type: Mixed,
-        reuired: true
+        type: Object,
+        required: true
     },
     schedule_proposals:{
         type: Array,
-        reuired: true
+        required: true
     }
 });
 
