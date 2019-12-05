@@ -7,7 +7,7 @@ function createMeeting (e) {
     let nombre = document.querySelector('#fname').value
     let description = document.querySelector('#description').value
     let importance = document.querySelector('#importance').value
-    let id = getLastMeetingId() + 1 
+    //let id = getLastMeetingId() + 1 
     // already have dates
     // already have people
     // already have quantity of people
@@ -18,19 +18,19 @@ function createMeeting (e) {
     }
 
     let resultJson = JSON.stringify({
-        'id': id,
-        'nombre': nombre,
-        'descripcion': description,
-        'no_integrantes': people.length,
-        'fecha': null,
-        'importancia': importance,
-        'organizador': 1,
-        'horarios_propuestos': dates,
-        'integrantes': people
+        // 'id': id,
+        'name': nombre,
+        'description': description,
+        'participants_number': people.length,
+        'date': "",
+        'importance': importance,
+        'organizer': 1,
+        'schedule_proposals': dates,
+        'participants': people
     })
 
     let xhr = new XMLHttpRequest()
-    xhr.open('POST','http://localhost:3000/meetings')
+    xhr.open('POST','http://localhost:3000/api/meeting')
 
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -48,16 +48,17 @@ function createMeeting (e) {
 
 function detailAllMeeting (userId) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/meetings?organizador='+userId)
-
+    //xhr.open('GET','http://localhost:3000/api/meetings?organizador='+userId)
+    xhr.open('GET','http://localhost:3000/api/meetings')
     xhr.send()
     
     xhr.onload = function(){
+        console.log(xhr.response.result)
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            console.log(xhr.response)
-            resultJson = JSON.parse(xhr.response)
+            console.log(xhr.response.result)
+            resultJson = JSON.parse(xhr.response.result)
             console.log(resultJson)
             let htmlMeetings = `<div style="padding: 30px;padding-top: 80px;" >
             <table class="table table-striped table-hover">
@@ -77,12 +78,12 @@ function detailAllMeeting (userId) {
                 let dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
                 let dateTime = auxDate.getTime()
                 htmlMeetings += `<tr>
-                        <th onclick="clickRow(${item.id})" scope="row">${item.id}</th>
-                        <td onclick="clickRow(${item.id})">${item.nombre}</td>
-                        <td onclick="clickRow(${item.id})">${dateDay}</td>
-                        <td onclick="clickRow(${item.id})">${dateTime}</td>
-                        <td onclick="clickRow(${item.id})">${item.importancia}</td>
-                        <td><i class="fas fa-edit" onclick="editRow(${item.id})"></i></td>
+                        <th onclick="clickRow(${item._id})" scope="row">${item._id}</th>
+                        <td onclick="clickRow(${item._id})">${item.nombre}</td>
+                        <td onclick="clickRow(${item._id})">${dateDay}</td>
+                        <td onclick="clickRow(${item._id})">${dateTime}</td>
+                        <td onclick="clickRow(${item._id})">${item.importancia}</td>
+                        <td><i class="fas fa-edit" onclick="editRow(${item._id})"></i></td>
                     </tr>`
             })
             htmlMeetings += `</tbody>
@@ -95,13 +96,13 @@ function detailAllMeeting (userId) {
 
 function getMeetingDataById (id, type) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/meetings/'+id)
+    xhr.open('GET','http://localhost:3000/api/meeting/'+id)
     xhr.send()
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            let jsonResult = JSON.parse(xhr.response)
+            let jsonResult = JSON.parse(xhr.response.result)
             let dateResult
             let timeResult
             if(jsonResult.fecha) {
@@ -158,11 +159,15 @@ function drawProposals (type) {
         textHTML += `<div class="row">
                     <div class="col-md-3">
                         <i class="fas fa-calendar-day"></i>
-                        <label>${item}</label>
+                        <label>${item.date}</label>
                     </div>`
         if (type === 'edit') {
             textHTML += `<div class="col-md-1">
-                        <i class="fas fa-minus-circle" onclick="removeProposal('${item}')"></i>
+                        <i class="fas fa-minus-circle" onclick="removeProposal('${item.date}')"></i>
+                    </div>`
+        } else if (type === 'detail') {
+            textHTML += `<div class="col-md-1">
+                            <input type="checkbox" name="${item._id}" value="${item._id}" onchange="checkboxEventHandler('${item}')">
                     </div>`
         }
         textHTML += `</div>`
@@ -180,21 +185,21 @@ function removeParticipant (itemToRemove) {
 
 function removeProposal (itemToRemove) {
     dates = dates.filter(function (item) {
-        return item !== itemToRemove;
+        return item._id !== itemToRemove;
     });
     drawProposals('edit')
 }
 
 function getMeetings () {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/meetings')
+    xhr.open('GET','http://localhost:3000/api/meetings')
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            console.log(xhr.response)
+            console.log(xhr.response.result)
         }
     }
 }
@@ -207,20 +212,20 @@ function editMeeting (id) {
     // already have people
     // already have quantity of people
 
+    // get Id of current user
     let resultJson = {
-        'id': id,
-        'nombre': nombre,
-        'descripcion': description,
-        'no_integrantes': people.length,
-        'organizador': 1,
-        'fecha': null,
-        'importancia': importance,
-        'horarios_propuestos': dates,
-        'integrantes': people,
+        'name': nombre,
+        'description': description,
+        'participants_number': people.length,
+        'organizer': 1,
+        'date': null,
+        'importance': importance,
+        'schedule_proposals': dates,
+        'participants': people,
     }
 
     let xhr = new XMLHttpRequest()
-    xhr.open('PUT','http://localhost:3000/meetings/' + id)
+    xhr.open('PUT','http://localhost:3000/api/meetings/' + id)
 
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -237,30 +242,30 @@ function editMeeting (id) {
 
 function getUserId (username) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/users?username=' + username)
+    xhr.open('GET','http://localhost:3000/api/users?username=' + username)
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            console.log(xhr.response[0])
-            return xhr.response[0].id
+            console.log(xhr.response.result[0])
+            return xhr.response.result[0]._id
         }
     }
 }
 
 function getLastMeetingId () {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/meetings')
+    xhr.open('GET','http://localhost:3000/api/meetings')
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            allMeetings = xhr.response
-            return allMeetings[allMeetings.length-1].id
+            allMeetings = xhr.response.result
+            return allMeetings[allMeetings.length-1]._id
         }
     }
 }
@@ -271,19 +276,24 @@ function addDate () {
     let resultDate = new Date(date+ ' ' + time + ':00')
 
     let found = dates.find( function (item) {
-        return item.toString() === resultDate.toString()
+        return item.date.toString() === resultDate.toString()
     })
     if (found) {
         alert("Esta fecha ya se encuentra añadida")
         return
     }
 
-    dates.push(resultDate)
+    let auxProposal = {
+        date: resultDate,
+        votes: 0,
+        voters: []
+    }
+    dates.push(auxProposal)
     let htmlDates = ''
     dates.forEach(item =>{
         htmlDates += `<div class="col-md-8">
             <i class="fas fa-calendar-day"></i>
-            <label>${item.toLocaleString()}</label>
+            <label>${item.date.toLocaleString()}</label>
         </div>`
     })
     document.getElementById("beginDates").innerHTML = htmlDates
@@ -294,16 +304,16 @@ function addPerson () {
     let username = document.querySelector('#email').value
     let xhr = new XMLHttpRequest()
 
-    xhr.open('GET','http://localhost:3000/users?username=' + username)
+    xhr.open('GET','http://localhost:3000/api/user/username/' + username)
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         } else {
-            console.log(JSON.parse(xhr.response)[0].id)
-            console.log(people)
-            let personId = JSON.parse(xhr.response)[0].id
+            let auxResponse = JSON.parse(xhr.response) 
+            console.log(xhr.response)
+            let personId = auxResponse.result[0]._id
             let found = people.find( function (item) {
                 return item === personId
             })
@@ -325,4 +335,32 @@ function addPerson () {
     }
 }
 
+function checkboxEventHandler(proposalVote) {
+    inputChk = document.getElementById(proposalVote).checked
+    userId = 1 //checar el id del user
+    if (inputChk) {
+        dates.forEach(item => {
+            if (item._id === proposalVote) {
+                item.voters = item.voters.find(function (item) {
+                    return item._id === proposalVote
+                });
+            } 
+            if (!found) {
+                proposal.push(userId)
+            }
+        })
+    } else {
+        dates.forEach(item => {
+            if (item._id === proposalVote) {
+                item.voters = item.voters.filter(function (item) {
+                    // checar si es el usuario o quien
+                    return item._id !== userId;
+                });
+            }
+        })
+    }
+}
 
+function updateProposals () {
+
+}
