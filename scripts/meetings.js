@@ -1,33 +1,46 @@
 let dates = []
 let people = []
 let usersnames = []
+let currentUser = JSON.parse(sessionStorage.getItem("user"))
+let meeting
+let finalDate = ""
 
-function createMeeting (e) {
-    console.log("foo")
-    let nombre = document.querySelector('#fname').value
-    let description = document.querySelector('#description').value
-    let importance = document.querySelector('#importance').value
+function constructMeeting () {
+    let nombre = document.querySelector('#nameMeetingInput').value
+    let description = document.querySelector('#descriptionInput').value
+    let importance = document.querySelector('#importanceInput').value
     //let id = getLastMeetingId() + 1 
     // already have dates
     // already have people
     // already have quantity of people
-
-    if (!(nombre && description && importance)) {
-        alert("Faltan datos")
-        return
-    }
-
+    
     let resultJson = JSON.stringify({
         // 'id': id,
         'name': nombre,
         'description': description,
         'participants_number': people.length,
-        'date': "",
+        'date': finalDate,
         'importance': importance,
-        'organizer': 1,
+        'organizer': currentUser,
         'schedule_proposals': dates,
         'participants': people
     })
+    return resultJson
+}
+
+function createMeeting (e) {
+    console.log("foo")
+    
+    resultJson = constructMeeting()
+    
+    if (!(resultJson.name && resultJson.description && resultJson.importance)) {
+        alert("Faltan datos")
+        return
+    }
+
+    console.log(resultJson)
+    
+    if (!resultJson) return
 
     let xhr = new XMLHttpRequest()
     xhr.open('POST','http://localhost:3000/api/meeting')
@@ -57,8 +70,7 @@ function detailAllMeeting (userId) {
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            console.log(xhr.response.result)
-            resultJson = JSON.parse(xhr.response.result)
+            resultJson = JSON.parse(xhr.response).results
             console.log(resultJson)
             let htmlMeetings = `<div style="padding: 30px;padding-top: 80px;" >
             <table class="table table-striped table-hover">
@@ -73,18 +85,28 @@ function detailAllMeeting (userId) {
                     </tr>
                 </thead>
                 <tbody>`
-            resultJson.forEach(item=>{
-                let auxDate = new Date(item.fecha)
-                let dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
-                let dateTime = auxDate.getTime()
+            let x = 0;
+            resultJson.forEach(item => {
+                let auxDate
+                let dateDay = 'Sin Definir'
+                let dateTime = 'Sin Definir'
+                if (item.date) {
+                    auxDate = new Date(item.fecha)
+                    dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
+                    dateTime = auxDate.getTime()
+                }
                 htmlMeetings += `<tr>
-                        <th onclick="clickRow(${item._id})" scope="row">${item._id}</th>
-                        <td onclick="clickRow(${item._id})">${item.nombre}</td>
-                        <td onclick="clickRow(${item._id})">${dateDay}</td>
-                        <td onclick="clickRow(${item._id})">${dateTime}</td>
-                        <td onclick="clickRow(${item._id})">${item.importancia}</td>
-                        <td><i class="fas fa-edit" onclick="editRow(${item._id})"></i></td>
-                    </tr>`
+                        <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
+                        <td onclick="clickRow('${item._id}')">${item.name}</td>
+                        <td onclick="clickRow('${item._id}')">${dateDay}</td>
+                        <td onclick="clickRow('${item._id}')">${dateTime}</td>
+                        <td onclick="clickRow('${item._id}')">${item.importance}</td>
+                        <td>`
+                if (currentUser._id === item.organizer._id) {
+                    htmlMeetings += `<i class="fas fa-edit" onclick="editRow('${item._id}')"></i>`
+                }
+                htmlMeetings += `</td></tr>`
+                x++
             })
             htmlMeetings += `</tbody>
                     </table>
@@ -102,31 +124,30 @@ function getMeetingDataById (id, type) {
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            let jsonResult = JSON.parse(xhr.response.result)
-            let dateResult
-            let timeResult
-            if(jsonResult.fecha) {
-                dateResult = jsonResult.fecha.split(' ')[0]
-                timeResult = jsonResult.fecha.split(' ')[1]
-            } else {
-                dateResult = ""
-                timeResult = ""
+            let jsonResult = JSON.parse(xhr.response).result
+            console.log(jsonResult)
+            let dateResult = ""
+            let timeResult = ""
+            if(jsonResult.date) {
+                let auxDate = new Date(jsonResult.date)
+                dateResult = auxDate.toLocaleString().split(' ')[0]
+                timeResult = auxDate.toLocaleString().split(' ')[1]
             }
             document.getElementById("datepicker").value = dateResult
             document.getElementById("timepicker").value = timeResult
             if (type === 'detail') {
-                document.getElementById("nameMeetingLabel").innerText = jsonResult.nombre
-                document.getElementById("importanceLabel").innerText = jsonResult.importancia
-                document.getElementById("organizerLabel").innerText = jsonResult.organizador
-                document.getElementById("descriptionParagraph").innerText = jsonResult.descripcion
+                document.getElementById("nameMeetingLabel").innerText = jsonResult.name
+                document.getElementById("importanceLabel").innerText = jsonResult.importance
+                document.getElementById("organizerLabel").innerText = jsonResult.organizer
+                document.getElementById("descriptionParagraph").innerText = jsonResult.description
             } else {
-                document.getElementById("nameMeetingInput").value = jsonResult.nombre
-                document.getElementById("importanceInput").value = jsonResult.importancia
-                document.getElementById("descriptionInput").value = jsonResult.descripcion
+                document.getElementById("nameMeetingInput").value = jsonResult.name
+                document.getElementById("importanceInput").value = jsonResult.importance
+                document.getElementById("descriptionInput").value = jsonResult.description
             }
             
-            dates = jsonResult.horarios_propuestos
-            people = jsonResult.integrantes 
+            dates = jsonResult.schedule_proposals
+            people = jsonResult.participants 
 
             drawParticipants(type)
             drawProposals(type)
@@ -136,34 +157,35 @@ function getMeetingDataById (id, type) {
 
 function drawParticipants (type) {
     textHTML = ''
+    
     people.forEach(item => {
         textHTML += `<div class="row">
             <div class="col-md-3">
                 <i class="fa fa-user bigicon"></i>
-                <label>${item}</label>
+                <label>${item.username}</label>
             </div>`
         if (type === 'edit') {
             textHTML += `<div class="col-md-1">
-                <i class="fas fa-minus-circle" onclick="removeParticipant(${item})"></i>
+                <i class="fas fa-minus-circle" onclick="removeParticipant('${item._id}')"></i>
             </div>`
         }
         textHTML += `</div>`
-        document.getElementById("participantsDiv").innerHTML = textHTML
     })
+    document.getElementById("participantsDiv").innerHTML = textHTML
 }
 
 function drawProposals (type) {
-    textHTML = ""
+    textHTML = ''
     dates.forEach(item =>{
         console.log(item)
         textHTML += `<div class="row">
                     <div class="col-md-3">
                         <i class="fas fa-calendar-day"></i>
-                        <label>${item.date}</label>
+                        <label>${item.date.toLocaleString()}</label>
                     </div>`
         if (type === 'edit') {
             textHTML += `<div class="col-md-1">
-                        <i class="fas fa-minus-circle" onclick="removeProposal('${item.date}')"></i>
+                        <i class="fas fa-minus-circle" onclick="removeProposal('${item.date.toLocaleString()}')"></i>
                     </div>`
         } else if (type === 'detail') {
             textHTML += `<div class="col-md-1">
@@ -171,21 +193,20 @@ function drawProposals (type) {
                     </div>`
         }
         textHTML += `</div>`
-        document.getElementById("proposalsDivs").innerHTML = textHTML
     })
+    document.getElementById("proposalsDivs").innerHTML = textHTML
 }
 
 function removeParticipant (itemToRemove) {
     people = people.filter(function (item) {
-        console.log(item !== itemToRemove)
-        return item !== itemToRemove;
+        return item._id !== itemToRemove;
     });
     drawParticipants('edit')
 }
 
 function removeProposal (itemToRemove) {
     dates = dates.filter(function (item) {
-        return item._id !== itemToRemove;
+        return item.date.toLocaleString() !== itemToRemove;
     });
     drawProposals('edit')
 }
@@ -204,28 +225,24 @@ function getMeetings () {
     }
 }
 
-function editMeeting (id) {
-    let nombre = document.querySelector('#fname').value
-    let description = document.querySelector('#description').value
-    let importance = document.querySelector('#importance').value
-    // already have dates
-    // already have people
-    // already have quantity of people
+function defineDate () {
+    let date = document.querySelector('#datepicker').value
+    let time = document.querySelector('#timepicker').value
+    
+    if (!(date && time)) return
 
-    // get Id of current user
-    let resultJson = {
-        'name': nombre,
-        'description': description,
-        'participants_number': people.length,
-        'organizer': 1,
-        'date': null,
-        'importance': importance,
-        'schedule_proposals': dates,
-        'participants': people,
-    }
+    let resultDate = new Date(date + ' ' + time + ':00')
+    
+    finalDate = resultDate
+
+    editMeeting()
+}
+
+function editMeeting () {
+    resultJson = constructMeeting()
 
     let xhr = new XMLHttpRequest()
-    xhr.open('PUT','http://localhost:3000/api/meetings/' + id)
+    xhr.open('PUT','http://localhost:3000/api/meeting/' + idMeeting)
 
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -235,7 +252,7 @@ function editMeeting (id) {
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             alert('Meeting Modificada')
-            window.location.href = "/calendario.html"
+            location.reload()
         }
     }
 }
@@ -289,14 +306,15 @@ function addDate () {
         voters: []
     }
     dates.push(auxProposal)
-    let htmlDates = ''
-    dates.forEach(item =>{
-        htmlDates += `<div class="col-md-8">
-            <i class="fas fa-calendar-day"></i>
-            <label>${item.date.toLocaleString()}</label>
-        </div>`
-    })
-    document.getElementById("beginDates").innerHTML = htmlDates
+    drawProposals('edit')
+    // let htmlDates = ''
+    // dates.forEach(item =>{
+    //     htmlDates += `<div class="col-md-8">
+    //         <i class="fas fa-calendar-day"></i>
+    //         <label>${item.date.toLocaleString()}</label>
+    //     </div>`
+    // })
+    // document.getElementById("beginDates").innerHTML = htmlDates
 }
 
 
@@ -315,38 +333,40 @@ function addPerson () {
             console.log(xhr.response)
             let personId = auxResponse.result[0]._id
             let found = people.find( function (item) {
-                return item === personId
+                return item._id === personId
             })
             if (found) {
                 alert("Este usuario ya se encuentra añadido")
                 return
             }
             usersnames.push(username)
-            people.push(personId)
-            let htmlUsers = ''
-            usersnames.forEach(item => {
-                htmlUsers += `<div class="col-md-8">
-                    <i class="fa fa-user bigicon"></i>
-                    <label>${item}</label>
-                </div>`
-            })
-            document.getElementById("beginUsers").innerHTML = htmlUsers
+            people.push(auxResponse.result[0])
+            drawParticipants('edit')
+            // let htmlUsers = ''
+            // usersnames.forEach(item => {
+            //     htmlUsers += `<div class="col-md-8">
+            //         <i class="fa fa-user bigicon"></i>
+            //         <label>${item}</label>
+            //     </div>`
+            // })
+            // document.getElementById("beginUsers").innerHTML = htmlUsers
         }
     }
 }
 
 function checkboxEventHandler(proposalVote) {
     inputChk = document.getElementById(proposalVote).checked
-    userId = 1 //checar el id del user
+    //currentUser
     if (inputChk) {
         dates.forEach(item => {
             if (item._id === proposalVote) {
                 item.voters = item.voters.find(function (item) {
+                    item.votes++
                     return item._id === proposalVote
                 });
             } 
             if (!found) {
-                proposal.push(userId)
+                proposal.push(currentUser)
             }
         })
     } else {
@@ -354,11 +374,13 @@ function checkboxEventHandler(proposalVote) {
             if (item._id === proposalVote) {
                 item.voters = item.voters.filter(function (item) {
                     // checar si es el usuario o quien
-                    return item._id !== userId;
+                    item.votes--
+                    return item._id !== currentUser._id;
                 });
             }
         })
     }
+
 }
 
 function updateProposals () {

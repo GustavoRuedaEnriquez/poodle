@@ -73,7 +73,6 @@ function getMeetingsByUserId(req,res){
 
 function getMeetingById(req,res){
     let meetingId = req.params.id;
-    console.log(req)
     Meeting.findById(meetingId,(err,proposal) => {
         if(err){
             res.status(500).send({message: 'Server error.'});
@@ -89,7 +88,7 @@ function getMeetingById(req,res){
 
 function updateMeetingById(req,res){
     let meetingId = req.params.id;
-    Meeting.findById(meetingId,(err,proposal) => {
+    Meeting.findOneAndUpdate({_id: meetingId}, req.body, {new:true},(err,proposal) => {
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
