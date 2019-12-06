@@ -12,5 +12,6 @@ api.get('/users',UserController.getUsers);
 api.get('/user/:id',UserController.getUserById);
 api.get('/user/username/:username',UserController.getUserByUsername);
 api.patch('/user/:email',mdAuth.ensureAuth,UserController.updateUser);
+api.patch('/user/stats/:email',UserController.updateMeetingStats);
 
 module.exports = api;

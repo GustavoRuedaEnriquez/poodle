@@ -140,11 +140,42 @@ function getUserByEmail(req,res){
 }
 
 function updateUser(req, res){
-  
     let userEmail = req.params.email;
     let update = req.body;
 
     User.findOneAndUpdate({email: userEmail}, update, {new:true}, (err,updatedUser) =>{
+        if(err){
+            console.log(err);
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(!updatedUser){
+                res.status(404).send({message: 'Could not update the user.'});
+            }else{
+                res.status(200).send({message:'User updated', result : updatedUser})
+            }
+        }
+    });
+}
+
+function updateMeetingStats(req,res){
+    let userEmail = req.params.email;
+    let actualIncrement = req.body.actualIncrement;
+    let pendingIncrement = req.body.pendingIncrement;
+    let assistedIncrement = req.body.assistedIncrement;
+
+    if(actualIncrement == undefined){
+        res.status(400).send({'message':'actualIncrement is missing.'});
+    }
+
+    if(pendingIncrement == undefined){
+        res.status(400).send({'message':'pendingIncrement is missing.'});
+    }
+
+    if(assistedIncrement == undefined){
+        res.status(400).send({'message':'assistedIncrement is missing.'});
+    }
+
+    User.findOneAndUpdate({email: userEmail}, { $inc: { actual: actualIncrement, pending: pendingIncrement, assisted: assistedIncrement} },{new:true}, (err,updatedUser) =>{
         if(err){
             console.log(err);
             res.status(500).send({message: 'Server error.'});
@@ -165,6 +196,7 @@ module.exports = {
     getUsersPage,
     getUserById,
     getUserByEmail,
-    updateUser, 
-    getUserByUsername
+    updateUser,
+    getUserByUsername,
+    updateMeetingStats
 };
