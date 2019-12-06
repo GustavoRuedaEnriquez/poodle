@@ -6,6 +6,7 @@ people.push(currentUser)
 let meeting
 let meetings = []
 let finalDate = ""
+let totalPagesLen = 3
 
 function constructMeeting () {
     let nombre = document.querySelector('#nameMeetingInput').value
@@ -53,10 +54,10 @@ function createMeeting (e) {
 }
 
 
-function detailAllMeeting () {
+function detailAllMeeting (page, limit) {
     let xhr = new XMLHttpRequest()
     //xhr.open('GET','http://localhost:3000/api/meetings?organizador='+userId)
-    xhr.open('GET','http://localhost:3000/api/meetings/user/' + currentUser.email)
+    xhr.open('GET',`http://localhost:3000/api/meetings/user/${currentUser.email}?page=${page}&limit=${limit}`)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     
@@ -64,6 +65,7 @@ function detailAllMeeting () {
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
+            totalPagesLen = JSON.parse(xhr.response).lengthRes
             meetings = JSON.parse(xhr.response).results
             meetings.map(item => {
                 let auxDate
@@ -79,8 +81,56 @@ function detailAllMeeting () {
                 return item
             })
             drawDetailTable(meetings)
+            makePagination()
         }
     }
+}
+
+function makePagination () {
+    pages = Math.floor((totalPagesLen + 5 - 1) / 5)
+    $('#pagination-demo').twbsPagination({
+        totalPages: pages,
+        // the current page that show on start
+        startPage: 1,
+
+        // maximum visible pages
+        visiblePages: 5,
+
+        initiateStartPageClick: true,
+
+        // template for pagination links
+        href: false,
+
+        // variable name in href template for page number
+        hrefVariable: '{{number}}',
+
+        // Text labels
+        first: 'First',
+        prev: 'Previous',
+        next: 'Next',
+        last: 'Last',
+
+        // carousel-style pagination
+        loop: false,
+
+        // callback function
+        onPageClick: function (event, page) {
+            // details
+            detailAllMeeting(page, 5)
+            $('.page-active').removeClass('page-active');
+        $('#page'+page).addClass('page-active');
+        },
+
+        // pagination Classes
+        paginationClass: 'pagination',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first',
+        pageClass: 'page',
+        activeClass: 'active',
+        disabledClass: 'disabled'
+    });
 }
 
 function drawDetailTable (filterMeetings) {
@@ -196,16 +246,31 @@ function drawProposals (type) {
         } else if (type === 'detail') {
             textHTML += `<div class="col-md-1">
                             <input type="checkbox" name="${item.date}" value="${item.date}" id="${item.date}" onchange="checkboxEventHandler('${item.date}')" `
-            let found = item.voters.find(function (item) {
-                return item._id === currentUser._id
+            let found = item.voters.find(function (itemVoter) {
+                return itemVoter._id === currentUser._id
             })
             if (found) {
                 textHTML += `checked` 
             }
             textHTML += `>
-                    </div>`
+                    </div>
+                    `
         }
-        textHTML += `</div>`
+        textHTML += `<div class="col-md-2">Total de Votos: <b>${item.votes}</b></div>`
+        // textHTML += `<div class="col-md-1 btn-group">
+        // <button type="button" class="btn btn-xs dropdown-toggle" style="width: fit-content;height: fit-content;padding:0px"
+        //         data-toggle="dropdown">
+        //   <span class="caret"></span>
+        // </button>
+      
+        // <ul class="dropdown-menu" role="menu">`
+        
+        // item.voters.forEach(itemVoter => {
+        //     textHTML +=`<li>${itemVoter.username}</li>`
+        // })
+        // textHTML += `</ul>
+        //   </div>`
+        textHTML += ` </div>`
     })
 
     document.getElementById("proposalsDivs").innerHTML = textHTML
@@ -383,25 +448,26 @@ function checkboxEventHandler(proposalVote) {
                 })
                 if (!found) {
                     item.voters.push(currentUser)
-                    item.votes++
+                    item.votes = item.voters.length
                 }
             } 
         })
     } else {
         dates.forEach(item => {
             if (item.date.toLocaleString() === proposalVote.toLocaleString()) {
-                item.voters = item.voters.filter(function (item) {
+                item.voters = item.voters.filter(function (itemVoters) {
                     // checar si es el usuario o quien
-                    if (item._id !== currentUser._id) {
-                        item.votes--
+                    if (itemVoters._id !== currentUser._id) {
                         return true
                     } 
                     return false
                 });
+                item.votes = item.voters.length
             }
         })
     }
     updateProposals()
+    drawProposals('detail')
     console.log(dates)
 }
 

@@ -63,7 +63,7 @@ function getMeetings(req,res){
                     let end = (limit * page) - 1;
                     temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
                 }
-                res.status(200).send({message:'Meetings obtained', length: len, results : temp});
+                res.status(200).send({message:'Meetings obtained', lengthRes: len, results : temp});
             }
         }
     });
@@ -90,7 +90,7 @@ function getMeetingsByUserId(req,res){
                     let end = (limit * page) - 1;
                     temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
                 }
-                res.status(200).send({message:'Meetings obtained', length: len ,results : temp});
+                res.status(200).send({message:'Meetings obtained', lengthRes: len ,results : temp});
             }
         }
     });
@@ -155,7 +155,7 @@ function getMeetingsByUser(req,res){
                     let end = (limit * page) - 1;
                     temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
                 }
-                res.status(200).send({message:'Meetings obtained', length: len, results : temp});
+                res.status(200).send({message:'Meetings obtained', lengthRes: len, results : temp});
             }
         }
     });
@@ -194,7 +194,7 @@ function getMeetingsByMonthAndUser(req,res){
                         temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
                     }
                     
-                res.status(200).send({message:'Meetings obtained', length: len , results : temp});
+                res.status(200).send({message:'Meetings obtained', lengthRes: len , results : temp});
                 }
             }
         }
