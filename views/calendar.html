@@ -408,6 +408,7 @@
                 this.monthString = this.month.clone().format('MMMM YYYY')
                 let xhr = new XMLHttpRequest()
                 xhr.open('GET','http://localhost:3000/api/meetings')
+                xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
                 xhr.send()
                 xhr.onload = () => {
                     if(xhr.status != 200){
