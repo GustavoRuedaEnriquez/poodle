@@ -10,7 +10,7 @@ function logIn(evt) {
     if(document.querySelectorAll("input:invalid").length == 0) {
         event.preventDefault();
         let xhr = new XMLHttpRequest();
-        xhr.open('POST','http://127.0.0.1:3000/api/login');
+        xhr.open('POST','/api/login');
 
         xhr.setRequestHeader('content-type','application/json');
         
