@@ -333,7 +333,7 @@
                 
                 this.month = moment()
                 this.today = this.selected = this.month.clone()
-                this.weekDays = ["lun.", "mar.", "mié.", "jue.", "vie.", "sáb.", "dom."]
+                this.weekDays = [ "dom.", "lun.", "mar.", "mié.", "jue.", "vie.", "sáb."]
                 
                 this.headDivs.forEach((day, index) => {
                 day.innerText = this.weekDays[index]
@@ -406,8 +406,6 @@
                               let auxMin = auxDate.getMinutes() < 10 ? '0' : ''
                               dateDay = auxDay + auxDate.getDate() + '/' + auxMonth + (auxDate.getMonth() + 1) + '/' + auxDate.getFullYear()
                               dateTime = auxHour + auxDate.getHours() + ':' + auxMin + auxDate.getMinutes()
-                              console.log(dateDay)
-                              console.log(dateTime)
                           }
                           item.dateString = dateDay
                           item.timeString = dateTime
@@ -421,7 +419,7 @@
                           return auxDate.getDate() == (x+1)
                         })
                       }
-
+                      console.log(resultJsonMeetings)
                       this.draw(resultJsonMeetings)
                     }
                 }
@@ -451,11 +449,14 @@
               this.monthDiv.innerText = this.monthString
               let dateString = ''
               let index = 0
-
               if (this.calendarDays.first > 1) {
                 for (let day = this.calendarDays.first; day <= this.monthDays.lastPrevious; index ++) {
                     //this.bodyDivs[index].innerText = day++
-                    dateString = '' + day + '/' + this.month.format('MM/YYYY')
+                    let auxDayParse = day < 10 ? '0' : ''
+                    console.log('foo')
+                    dateString = '' + auxDayParse + day + '/' + this.month.format('MM/YYYY')
+                    console.log(dateString)
+
                     let existMeetingInDate = resultJsonMeetings.filter(function (item) {
                       let auxDateItem = new Date(item.date)
                       let auxDay = auxDateItem.getDate() < 10 ? '0' : ''
@@ -467,6 +468,7 @@
                       existMeetingInDate.forEach(item => {
                         let auxHour = item.getHours() < 10 ? '0' : ''
                         let auxMin = item.getMinutes() < 10 ? '0' : ''
+                        console.log('' + auxHour + item.date.getHours() + ':' + auxMin + item.date.getMinutes() + item.name.substring(0,10))
                         auxData.push('' + auxHour + item.date.getHours() + ':' + auxMin + item.date.getMinutes() + item.name.substring(0,10))
                       })
                     }
@@ -489,6 +491,7 @@
 
                 this.cleanCssClasses(true, index)
 
+                let auxDayParse = day < 10 ? '0' : ''
                 if (!isNextMonth) {
                     if (day === this.today.date() && this.today.isSame(this.month, 'day')) {
                     this.bodyDivs[index].classList.add('cal-day__day--today') 
@@ -499,16 +502,16 @@
                     }
 
                     this.bodyDivs[index].classList.add('cal-day__month--current')
-                    dateString = '' + day + '/' + (this.month.format('MM') ) + '/' + this.month.format('YYYY')
+                    dateString = '' + auxDayParse + day + '/' + (this.month.format('MM') ) + '/' + this.month.format('YYYY')
 
                     this.bodyDivs[index].setAttribute("data-toggle", "modal")
                     this.bodyDivs[index].setAttribute("data-target", "#meetingModal")
                 } else {
                     this.bodyDivs[index].classList.add('cal-day__month--next')
                     if (this.month._d.getMonth() === 11) {
-                      dateString = '' + day + '/' + '01' + '/' + this.month.format('YYYY')
+                      dateString = '' + auxDayParse + day + '/' + '01' + '/' + this.month.format('YYYY')
                     } else {
-                      dateString = '' + day+ '/' + (this.month._d.getMonth() + 2) + '/' + this.month.format('YYYY') 
+                      dateString = '' + auxDayParse + day+ '/' + (this.month._d.getMonth() + 2) + '/' + this.month.format('YYYY') 
                     }
                     
                 }
@@ -527,6 +530,7 @@
                     let auxItem = new Date(item.date)
                     let auxHour = auxItem.getHours() < 10 ? '0' : ''
                     let auxMin = auxItem.getMinutes() < 10 ? '0' : ''
+                    console.log('' + auxHour + auxItem.getHours() + ':' + auxMin + auxItem.getMinutes() + ' - ' +  item.name.substring(0,10))
                     auxData.push('' + auxHour + auxItem.getHours() + ':' + auxMin + auxItem.getMinutes() + ' - ' +  item.name.substring(0,10))
                   })
                 }
