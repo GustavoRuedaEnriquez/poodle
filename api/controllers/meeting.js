@@ -44,14 +44,26 @@ function addMeeting(req, res){
 }
 
 function getMeetings(req,res){
-    Meeting.find({},(err, meetings) => {
+    Meeting.find({}).lean(true).exec((err, meetings) => {
         if(err){
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(meetings).length === 0){
                 res.status(404).send({message: 'No meetings found.'});
             }else{
-                res.status(200).send({message:'Meetings obtained', results : meetings});
+                let temp = meetings; 
+
+                if(req.query.page != undefined){
+                    let page = req.query.page;
+                    let limit = 5;
+                    if(req.query.limit != undefined){
+                        limit = req.query.limit;
+                    }
+                    let start = ((limit*page) - (limit-1)) - 1;
+                    let end = (limit * page) - 1;
+                    temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
+                }
+                res.status(200).send({message:'Meetings obtained', results : temp});
             }
         }
     });
@@ -65,7 +77,19 @@ function getMeetingsByUserId(req,res){
             if(Object.entries(Proposal).length === 0){
                 res.status(404).send({message: 'No meetings found.'});
             }else{
-                res.status(200).send({message:'Meetings obtained', results : meetings});
+                let temp = meetings; 
+
+                if(req.query.page != undefined){
+                    let page = req.query.page;
+                    let limit = 5;
+                    if(req.query.limit != undefined){
+                        limit = req.query.limit;
+                    }
+                    let start = ((limit*page) - (limit-1)) - 1;
+                    let end = (limit * page) - 1;
+                    temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
+                }
+                res.status(200).send({message:'Meetings obtained', results : temp});
             }
         }
     });
@@ -117,7 +141,19 @@ function getMeetingsByUser(req,res){
                         meetings[i].role = "Participant";
                     }
                 }
-                res.status(200).send({message:'Meetings obtained', results : meetings});
+                let temp = meetings; 
+
+                if(req.query.page != undefined){
+                    let page = req.query.page;
+                    let limit = 5;
+                    if(req.query.limit != undefined){
+                        limit = req.query.limit;
+                    }
+                    let start = ((limit*page) - (limit-1)) - 1;
+                    let end = (limit * page) - 1;
+                    temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
+                }
+                res.status(200).send({message:'Meetings obtained', results : temp});
             }
         }
     });
@@ -142,7 +178,20 @@ function getMeetingsByMonthAndUser(req,res){
                 if(Object.entries(final).length === 0){
                     res.status(404).send({message:'No meetings in this month.'});
                 } else {
-                    res.status(200).send({message:'Meetings obtained', results : final});
+                    let temp = final; 
+
+                    if(req.query.page != undefined){
+                        let page = req.query.page;
+                        let limit = 5;
+                        if(req.query.limit != undefined){
+                            limit = req.query.limit;
+                        }
+                        let start = ((limit*page) - (limit-1)) - 1;
+                        let end = (limit * page) - 1;
+                        temp = temp.filter((item, i) => {return i >= start &&  i <= end;});
+                    }
+                    
+                res.status(200).send({message:'Meetings obtained', results : temp});
                 }
             }
         }
