@@ -32,7 +32,6 @@ function constructMeeting () {
 function createMeeting (e) {
     
     resultJson = constructMeeting()
-    console.log(resultJson)
     
     if (!resultJson) return
 
@@ -60,12 +59,10 @@ function detailAllMeeting (userId) {
     xhr.send()
     
     xhr.onload = function(){
-        console.log(xhr.response.result)
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             resultJson = JSON.parse(xhr.response).results
-            console.log(resultJson)
             let htmlMeetings = `<div style="padding: 30px;padding-top: 80px;" >
             <table class="table table-striped table-hover">
                 <thead>
@@ -119,12 +116,10 @@ function getMeetingDataById (id, type) {
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
             let jsonResult = JSON.parse(xhr.response).result
-            console.log(jsonResult)
             let dateResult = ""
             let timeResult = ""
             if(jsonResult.date) {
                 jsonResult.date = new Date(jsonResult.date)
-                console.log(jsonResult.date.toLocaleString())
                 dateResult = jsonResult.date.toLocaleString().split(' ')[0]
                 timeResult = jsonResult.date.toLocaleString().split(' ')[1]
             }
@@ -174,8 +169,12 @@ function drawParticipants (type) {
 
 function drawProposals (type) {
     textHTML = ''
+<<<<<<< HEAD
     dates.forEach(item => {
         console.log(item)
+=======
+    dates.forEach(item =>{
+>>>>>>> develop
         textHTML += `<div class="row">
                     <div class="col-md-3">
                         <i class="fas fa-calendar-day"></i>
@@ -272,7 +271,6 @@ function getUserId (username) {
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            console.log(xhr.response.result[0])
             return xhr.response.result[0]._id
         }
     }
@@ -336,7 +334,6 @@ function addPerson () {
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         } else {
             let auxResponse = JSON.parse(xhr.response) 
-            console.log(xhr.response)
             let personId = auxResponse.result[0]._id
             let found = people.find( function (item) {
                 return item._id === personId
