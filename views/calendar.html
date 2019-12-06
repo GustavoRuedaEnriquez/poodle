@@ -148,14 +148,14 @@
    <!--Navigation bar-->
    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark" id="ftco-navbar">
       <div class="container">
-          <a class="navbar-brand" href="calendar.html" style="font-weight: bold;">Poodle</a>
+          <a style="font-weight:bold ;" class="navbar-brand" href="calendar.html">Poodle</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
               aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="oi oi-menu"></span> Menu
           </button>
 
           <div class="collapse navbar-collapse" id="ftco-nav">
-              <ul class="navbar-nav ml-auto">
+              <ul class="navbar-nav ml-auto" style="float: right;">
                   <li class="nav-item cta"><a href="create-meeting.html" class="nav-link"><span>Crear</span></a></li>
                   <li class="nav-item cta"><a href="my-meetings.html" class="nav-link"><span>Mis Meetings</span></a></li>
                   <li class="nav-item cta"><a href="user.html" class="nav-link"><span>Mi perfil</span></a></li>
@@ -163,14 +163,14 @@
               </ul>
           </div>
       </div>
-  </nav>
+    </nav>
   <!----------------->
 
     <div class="container" style="padding-top: 80px;">
-        <div>
+        <!-- <div>
           <input type="radio" name="type" value="month" checked="checked"> Mes
           <input type="radio" name="type" value="week"> Semana<br>
-        </div>
+        </div> -->
         <div class="calendar" id="calendar-week" style="display:none">
             <div class="calendar__month">
                 <div class="cal-month__previous"><</div>
@@ -345,7 +345,7 @@
                 this.bodyDivs.forEach(day => {
                 day.addEventListener('click', e => {
                     let dayToShow = e.target.attributes['value']['value']
-                    console.log(monthMeetings[dayToShow-1])
+                    
                     drawDetailTable(monthMeetings[dayToShow-1])
                     // draw table with day e.target.attributes['value']['value']
                     const date = +e.target.attributes['value']['value'] < 10 ? 
@@ -400,8 +400,14 @@
                           let dateTime = 'Sin Definir'
                           if (item.date) {
                               auxDate = new Date(item.date)
-                              dateDay = auxDate.getDate() + '/' + (auxDate.getMonth() + 1) + '/' + auxDate.getFullYear()
-                              dateTime = auxDate.getHours() + ':' + auxDate.getMinutes()
+                              let auxDay = auxDate.getDate() < 10 ? '0' : ''
+                              let auxMonth = auxDate.getMonth() < 9 ? '0' : ''
+                              let auxHour = auxDate.getHours() < 10 ? '0' : ''
+                              let auxMin = auxDate.getMinutes() < 10 ? '0' : ''
+                              dateDay = auxDay + auxDate.getDate() + '/' + auxMonth + (auxDate.getMonth() + 1) + '/' + auxDate.getFullYear()
+                              dateTime = auxHour + auxDate.getHours() + ':' + auxMin + auxDate.getMinutes()
+                              console.log(dateDay)
+                              console.log(dateTime)
                           }
                           item.dateString = dateDay
                           item.timeString = dateTime
@@ -412,7 +418,6 @@
                         monthMeetings[x] = resultJsonMeetings.filter(function (item) {
                           if (!(item.date)) return false 
                           let auxDate = new Date(item.date)
-                          console.log(auxDate.getDate())
                           return auxDate.getDate() == (x+1)
                         })
                       }
@@ -453,12 +458,16 @@
                     dateString = '' + day + '/' + this.month.format('MM/YYYY')
                     let existMeetingInDate = resultJsonMeetings.filter(function (item) {
                       let auxDateItem = new Date(item.date)
-                      return (auxDateItem.getDate() + '/' + auxDateItem.getMonth() + '/' + auxDateItem.getFullYear()) === dateString
+                      let auxDay = auxDateItem.getDate() < 10 ? '0' : ''
+                      let auxMonth = auxDateItem.getMonth() < 9 ? '0' : ''
+                      return (auxDay + auxDateItem.getDate() + '/' + auxMonth + auxDateItem.getMonth() + '/' + auxDateItem.getFullYear()) === dateString
                     })
                     let auxData = []
                     if (existMeetingInDate) {
                       existMeetingInDate.forEach(item => {
-                        auxData.push('' + item.date.getHours() + ':' + item.date.getMinutes() + item.name.substring(0,7))
+                        let auxHour = item.getHours() < 10 ? '0' : ''
+                        let auxMin = item.getMinutes() < 10 ? '0' : ''
+                        auxData.push('' + auxHour + item.date.getHours() + ':' + auxMin + item.date.getMinutes() + item.name.substring(0,10))
                       })
                     }
                     // request para obtener datos de dicha fecha
@@ -508,13 +517,17 @@
                 let existMeetingInDate = resultJsonMeetings.filter(function (item) {
                   if (!(item.date)) return false 
                   let auxDateItem = new Date(item.date)
-                  return (auxDateItem.getDate() + '/' + (auxDateItem.getMonth()+1) + '/' + auxDateItem.getFullYear()) === dateString
+                  let auxDay = auxDateItem.getDate() < 10 ? '0' : ''
+                  let auxMonth = auxDateItem.getMonth() < 9 ? '0' : ''
+                  return (auxDay + auxDateItem.getDate() + '/' + auxMonth + (auxDateItem.getMonth()+1) + '/' + auxDateItem.getFullYear()) === dateString
                 })
                 let auxData = []
                 if (existMeetingInDate) {
                   existMeetingInDate.forEach(item => {
                     let auxItem = new Date(item.date)
-                    auxData.push('' + auxItem.getHours() + ':' + auxItem.getMinutes() + ' - ' + item.name.substring(0,7))
+                    let auxHour = auxItem.getHours() < 10 ? '0' : ''
+                    let auxMin = auxItem.getMinutes() < 10 ? '0' : ''
+                    auxData.push('' + auxHour + auxItem.getHours() + ':' + auxMin + auxItem.getMinutes() + ' - ' +  item.name.substring(0,10))
                   })
                 }
                 // request para obtener datos de dicha fecha
@@ -544,7 +557,14 @@
         cal_month.init()
         const cal_week = new Calendar("calendar-week")
         cal_week.init()
+        
+        function clickRow (id) {
+            window.location.assign("./detail-meeting.html?id=" + id)
+        }
 
+        function editRow (id) {
+            window.location.assign("./edit-meeting.html?id=" + id)
+        }
     </script>
 </body>
 

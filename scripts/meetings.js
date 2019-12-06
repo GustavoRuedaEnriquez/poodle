@@ -73,8 +73,12 @@ function detailAllMeeting (page, limit) {
                 let dateTime = 'Sin Definir'
                 if (item.date) {
                     auxDate = new Date(item.date)
-                    dateDay = auxDate.getDate() + '/' + (auxDate.getMonth() + 1) + '/' + auxDate.getFullYear()
-                    dateTime = auxDate.getHours() + ':' + auxDate.getMinutes()
+                    let auxDay = auxDate.getDate() < 10 ? '0' : ''
+                    let auxMonth = auxDate.getMonth() < 9 ? '0' : ''
+                    let auxHour = auxDate.getHours() < 10 ? '0' : ''
+                    let auxMin = auxDate.getMinutes() < 10 ? '0' : ''
+                    dateDay = auxDay + auxDate.getDate() + '/' + auxMonth + (auxDate.getMonth() + 1) + '/' + auxDate.getFullYear()
+                    dateTime = auxHour + auxDate.getHours() + ':' + auxMin + auxDate.getMinutes()
                 }
                 item.dateString = dateDay
                 item.timeString = dateTime
