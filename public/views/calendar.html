@@ -385,7 +385,7 @@
 
                 this.monthString = this.month.clone().format('MMMM YYYY')
                 let xhr = new XMLHttpRequest()
-                xhr.open('GET','http://localhost:3000/api/meetings/month/'+
+                xhr.open('GET','/api/meetings/month/'+
                                   this.month.clone().format('YYYY')+'-'
                                   +this.month.clone().format('MM')+'/'+
                                   JSON.parse(sessionStorage.getItem("user")).email)

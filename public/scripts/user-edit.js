@@ -32,7 +32,7 @@ function updateUserInfo(e) {
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open('PATCH', 'http://127.0.0.1:3000/api/user/' + email);
+    xhr.open('PATCH', '/api/user/' + email);
 
     xhr.setRequestHeader('content-type','application/json');
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"));

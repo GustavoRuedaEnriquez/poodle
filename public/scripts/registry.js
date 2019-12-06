@@ -35,7 +35,7 @@ function register(event) {
     });
 
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://127.0.0.1:3000/api/user');
+    xhr.open('POST', '/api/user');
     xhr.setRequestHeader('content-type','application/json');
     xhr.send(str);
     xhr.onload = function(){

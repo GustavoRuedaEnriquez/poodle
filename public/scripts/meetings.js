@@ -38,7 +38,7 @@ function createMeeting (e) {
     if (!resultJson) return
 
     let xhr = new XMLHttpRequest()
-    xhr.open('POST','http://localhost:3000/api/meeting')
+    xhr.open('POST','/api/meeting')
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -56,8 +56,7 @@ function createMeeting (e) {
 
 function detailAllMeeting (page, limit) {
     let xhr = new XMLHttpRequest()
-    //xhr.open('GET','http://localhost:3000/api/meetings?organizador='+userId)
-    xhr.open('GET',`http://localhost:3000/api/meetings/user/${currentUser.email}?page=${page}&limit=${limit}`)
+    xhr.open('GET',`/api/meetings/user/${currentUser.email}?page=${page}&limit=${limit}`)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     
@@ -183,7 +182,7 @@ function drawDetailTable (filterMeetings) {
 
 function getMeetingDataById (id, type) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meeting/'+id)
+    xhr.open('GET','/api/meeting/'+id)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     xhr.onload = function(){
@@ -304,7 +303,7 @@ function removeProposal (itemToRemove) {
 
 function getMeetings () {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.open('GET','/api/meetings')
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     
@@ -334,7 +333,7 @@ function editMeeting () {
     resultJson = constructMeeting()
 
     let xhr = new XMLHttpRequest()
-    xhr.open('PUT','http://localhost:3000/api/meeting/' + idMeeting)
+    xhr.open('PUT','/api/meeting/' + idMeeting)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
@@ -351,7 +350,7 @@ function editMeeting () {
 
 function getUserId (username) {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/users?username=' + username)
+    xhr.open('GET','/api/users?username=' + username)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     
@@ -366,7 +365,7 @@ function getUserId (username) {
 
 function getLastMeetingId () {
     let xhr = new XMLHttpRequest()
-    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.open('GET','/api/meetings')
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     
@@ -415,7 +414,7 @@ function addPerson () {
     let username = document.querySelector('#email').value
     let xhr = new XMLHttpRequest()
 
-    xhr.open('GET','http://localhost:3000/api/user/username/' + username)
+    xhr.open('GET','/api/user/username/' + username)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.send()
     
@@ -490,7 +489,7 @@ function updateProposals () {
     })
 
     let xhr = new XMLHttpRequest()
-    xhr.open('PATCH','http://localhost:3000/api/meeting/' + idMeeting)
+    xhr.open('PATCH','/api/meeting/' + idMeeting)
     xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
     xhr.setRequestHeader('Content-type','application/json')
     xhr.send(resultJson)
