@@ -332,15 +332,15 @@
         </div>
     </div>
     <div class="modal fade" id="meetingModal" role="dialog">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
+            <h4 class="modal-title"></h4>
           </div>
           <div class="modal-body" id="modal-body">
-            <p>Some text in the modal.</p>
+              <div id="beginMeetings" ></div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -351,11 +351,14 @@
     </div>
     
     <!-- Optional JavaScript -->
+    <script src="../scripts/meetings.js"></script>
     <script src="../node_modules/moment/moment.js"></script>
     <script>
-        var radios = document.querySelectorAll('input[type=radio][name="type"]');
+        var radios = document.querySelectorAll('input[type=radio][name="type"]')
         var sectionMonth = document.getElementById("calendar-month")
-        var sectionWeek = document.getElementById("calendar-week");
+        var sectionWeek = document.getElementById("calendar-week")
+
+        var monthMeetings = []
 
         function changeHandler(event) {
           if ( this.value === 'month' ) {
@@ -396,6 +399,10 @@
                 
                 this.bodyDivs.forEach(day => {
                 day.addEventListener('click', e => {
+                    let dayToShow = e.target.attributes['value']['value']
+                    console.log(monthMeetings[dayToShow-1])
+                    drawDetailTable(monthMeetings[dayToShow-1])
+                    // draw table with day e.target.attributes['value']['value']
                     const date = +e.target.attributes['value']['value'] < 10 ? 
                       `0${e.target.attributes['value']['value']}` : e.target.attributes['value']['value']
 
@@ -427,20 +434,44 @@
                   lastCurrent: this.month.clone().endOf('month').date()
                 }
                 
-                let toReq = JSON.stringify({'email': JSON.parse(sessionStorage.getItem("user")).email})
-                console.log(toReq)
 
                 this.monthString = this.month.clone().format('MMMM YYYY')
                 let xhr = new XMLHttpRequest()
-                xhr.open('GET','http://localhost:3000/api/meetings/month/'+this.month.clone().format('MM')+'-'+this.month.clone().format('YYYY')+'')
+                xhr.open('GET','http://localhost:3000/api/meetings/month/'+
+                                  this.month.clone().format('YYYY')+'-'
+                                  +this.month.clone().format('MM')+'/'+
+                                  JSON.parse(sessionStorage.getItem("user")).email)
                 xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
                 xhr.setRequestHeader('Content-type','application/json')
-                xhr.send(toReq)
+                xhr.send()
                 xhr.onload = () => {
                     if(xhr.status != 200){
                         alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
                     }else{
                       let resultJsonMeetings = JSON.parse(xhr.response).results
+                      resultJsonMeetings =resultJsonMeetings.map(item => {
+                          let auxDate
+                          let dateDay = 'Sin Definir'
+                          let dateTime = 'Sin Definir'
+                          if (item.date) {
+                              auxDate = new Date(item.date)
+                              dateDay = auxDate.getDate() + '/' + (auxDate.getMonth() + 1) + '/' + auxDate.getFullYear()
+                              dateTime = auxDate.getHours() + ':' + auxDate.getMinutes()
+                          }
+                          item.dateString = dateDay
+                          item.timeString = dateTime
+                          return item
+                      })
+                      
+                      for (let x = 0; x<32; x++) {
+                        monthMeetings[x] = resultJsonMeetings.filter(function (item) {
+                          if (!(item.date)) return false 
+                          let auxDate = new Date(item.date)
+                          console.log(auxDate.getDate())
+                          return auxDate.getDate() == (x+1)
+                        })
+                      }
+
                       this.draw(resultJsonMeetings)
                     }
                 }
@@ -459,7 +490,6 @@
             }
             
             drawDay (index, day, data) {
-              console.log(this.bodyDivs[index])
               this.bodyDivs[index].innerHTML = '<b value="'+day+'">' + (day) + '</b>'
               data.forEach(item => {
                 this.bodyDivs[index].innerHTML += '<div style="line-height: 0.9;font-size: 9px;" value="'+day+'">' + item.toUpperCase() + '</div>'
