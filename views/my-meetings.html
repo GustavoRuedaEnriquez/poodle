@@ -64,10 +64,12 @@
         .pagination li.active a,
         .pagination li.active a.page-link {
             background: #03A9F4;
+            color: black;
         }
 
         .pagination li.active a:hover {
             background: #0397d6;
+            color: black;
         }
 
         .pagination li.disabled i {
@@ -84,7 +86,11 @@
             margin-top: 10px;
             font-size: 13px;
         }
-        
+        .pagination-lg .page-link {
+            padding: .50rem 1rem;
+            font-size: 15px;
+            line-height: 1.5;
+        }
     </style>
 
 </head>
@@ -169,7 +175,9 @@
         <div class="table-wrapper" style="padding: 20px;padding-top: 80px;">
             <div class="table-title">
             </div>
-            <input type="text" class="form-control" id="searchInput" placeholder="Search..." style="max-width:300px; margin-bottom:20px">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search..." style="float:left;width:300px; margin-bottom:20px">
+            
+            <ul id="pagination-demo" class="pagination-lg pull-right"></ul>
             <div id="beginMeetings" ></div>
             <!-- <div style="padding: 30px;padding-top: 80px;" >
                 <table class="table table-striped table-hover">
@@ -234,7 +242,6 @@
                 </ul>
             </div> -->
         </div>
-        <ul id="pagination-demo" class="pagination-lg pull-right"></ul>
         <!-- <nav aria-label="...">
             <ul class="pagination">
                 <li class="page-item disabled">

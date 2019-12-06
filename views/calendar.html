@@ -30,6 +30,10 @@
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
     <style>
       #ftco-navbar {
           position: fixed;
@@ -327,6 +331,24 @@
 
         </div>
     </div>
+    <div class="modal fade" id="meetingModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div>
+          <div class="modal-body" id="modal-body">
+            <p>Some text in the modal.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
     
     <!-- Optional JavaScript -->
     <script src="../node_modules/moment/moment.js"></script>
@@ -405,11 +427,15 @@
                   lastCurrent: this.month.clone().endOf('month').date()
                 }
                 
+                let toReq = JSON.stringify({'email': JSON.parse(sessionStorage.getItem("user")).email})
+                console.log(toReq)
+
                 this.monthString = this.month.clone().format('MMMM YYYY')
                 let xhr = new XMLHttpRequest()
-                xhr.open('GET','http://localhost:3000/api/meetings')
+                xhr.open('GET','http://localhost:3000/api/meetings/month/'+this.month.clone().format('MM')+'-'+this.month.clone().format('YYYY')+'')
                 xhr.setRequestHeader('Authorization',sessionStorage.getItem("token"))
-                xhr.send()
+                xhr.setRequestHeader('Content-type','application/json')
+                xhr.send(toReq)
                 xhr.onload = () => {
                     if(xhr.status != 200){
                         alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
@@ -433,7 +459,8 @@
             }
             
             drawDay (index, day, data) {
-              this.bodyDivs[index].innerHTML = '<b>' + (day) + '</b>'
+              console.log(this.bodyDivs[index])
+              this.bodyDivs[index].innerHTML = '<b value="'+day+'">' + (day) + '</b>'
               data.forEach(item => {
                 this.bodyDivs[index].innerHTML += '<div style="line-height: 0.9;font-size: 9px;" value="'+day+'">' + item.toUpperCase() + '</div>'
               })
@@ -465,7 +492,6 @@
                     
 
                     this.cleanCssClasses(false, index)
-
                     this.bodyDivs[index].classList.add('cal-day__month--previous')
                 } 
               }
@@ -490,6 +516,9 @@
 
                     this.bodyDivs[index].classList.add('cal-day__month--current')
                     dateString = '' + day + '/' + (this.month.format('MM') ) + '/' + this.month.format('YYYY')
+
+                    this.bodyDivs[index].setAttribute("data-toggle", "modal")
+                    this.bodyDivs[index].setAttribute("data-target", "#meetingModal")
                 } else {
                     this.bodyDivs[index].classList.add('cal-day__month--next')
                     if (this.month._d.getMonth() === 11) {

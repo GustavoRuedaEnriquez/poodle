@@ -162,8 +162,12 @@ function getMeetingsByUser(req,res){
 }
 
 function getMeetingsByMonthAndUser(req,res){
-    let month = req.params.month;
+    let month = req.params.month.split('-')[1];
+    let year = req.params.month.split('-')[0];
+    console.log(req.body)
+
     let email = req.body.email;
+    
     Meeting.find({$or:[{'participants.email':{$eq:email}},{'organizer.email':{$eq:email}}]}).lean(true).exec((err, meetings) => {
         if(err){
             console.log(err);
@@ -175,7 +179,7 @@ function getMeetingsByMonthAndUser(req,res){
                 let monthMeetings = meetings.filter((item) => {return item.date != null});
                 let final = monthMeetings.filter((item) => {
                     let date = new Date(item.date);
-                    return date.getMonth() ==  month;
+                    return date.getMonth() ==  month && date.getFullYear() ==  year;
                 });
                 if(Object.entries(final).length === 0){
                     res.status(404).send({message:'No meetings in this month.'});
