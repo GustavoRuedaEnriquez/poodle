@@ -94,7 +94,7 @@ function updateMeetingById(req,res){
         }else{
             if(Object.entries(proposal).length === 0){
                 res.status(404).send({message: 'Meeting not found.'});
-            }else{
+            } else {
                 res.status(200).send({message:'Meeting obtained', result : proposal});
             }
         }
@@ -123,11 +123,38 @@ function getMeetingsByUser(req,res){
     });
 }
 
+function getMeetingsByMonthAndUser(req,res){
+    let month = req.params.month;
+    let email = req.body.email;
+    Meeting.find({$or:[{'participants.email':{$eq:email}},{'organizer.email':{$eq:email}}]}).lean(true).exec((err, meetings) => {
+        if(err){
+            console.log(err);
+            res.status(500).send({message: 'Server error.'});
+        }else{
+            if(Object.entries(meetings).length === 0){
+                res.status(404).send({message: 'User has no meetings.'});
+            } else {
+                let monthMeetings = meetings.filter((item) => {return item.date != null});
+                let final = monthMeetings.filter((item) => {
+                    let date = new Date(item.date);
+                    return date.getMonth() ==  month;
+                });
+                if(Object.entries(final).length === 0){
+                    res.status(404).send({message:'No meetings in this month.'});
+                } else {
+                    res.status(200).send({message:'Meetings obtained', results : final});
+                }
+            }
+        }
+    });
+}
+
 
 module.exports = {
     addMeeting,
     getMeetings,
     getMeetingById,
     updateMeetingById,
-    getMeetingsByUser
+    getMeetingsByUser,
+    getMeetingsByMonthAndUser
 }
