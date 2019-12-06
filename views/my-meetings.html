@@ -165,10 +165,11 @@
     </nav>
     <!----------------->
     <div class="container">
-        <div class="table-wrapper">
+        <div class="table-wrapper" style="padding: 20px;padding-top: 80px;">
             <div class="table-title">
             </div>
-            <div id="beginMeetings" style="padding-top:70px"></div>
+            <input type="text" class="form-control" id="searchInput" placeholder="Search..." style="max-width:300px; margin-bottom:20px">
+            <div id="beginMeetings" ></div>
             <!-- <div style="padding: 30px;padding-top: 80px;" >
                 <table class="table table-striped table-hover">
                     <thead>
@@ -239,7 +240,25 @@
     <script src="../scripts/meetings.js"></script>
 
     <script>
-        detailAllMeeting(1) 
+        detailAllMeeting()
+
+        let searchElem = document.getElementById("searchInput")
+        searchElem.onkeyup = filterBySearch
+
+        function filterBySearch () {
+            let filteredMaterials = meetings.slice()
+            if (searchElem.value.length > 0) {
+                filteredMaterials = filteredMaterials.filter(item => {
+                    let maybe = (item.name.toUpperCase().includes(searchElem.value.toUpperCase())) ||
+                        (item.importance.toUpperCase().includes(searchElem.value.toUpperCase())) ||
+                        (item.dateString.toUpperCase().includes(searchElem.value.toUpperCase())) ||
+                        (item.timeString.toUpperCase().includes(searchElem.value.toUpperCase())) ||
+                        (item.organizer.username.toUpperCase().includes(searchElem.value.toUpperCase()))
+                    return maybe
+                })
+            }
+            drawDetailTable(filteredMaterials)
+        }
 
         function clickRow (id) {
             window.location.assign("./detail-meeting.html?id=" + id)

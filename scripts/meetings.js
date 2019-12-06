@@ -4,6 +4,7 @@ let usersnames = []
 let currentUser = JSON.parse(sessionStorage.getItem("user"))
 people.push(currentUser)
 let meeting
+let meetings = []
 let finalDate = ""
 
 function constructMeeting () {
@@ -52,32 +53,18 @@ function createMeeting (e) {
 }
 
 
-function detailAllMeeting (userId) {
+function detailAllMeeting () {
     let xhr = new XMLHttpRequest()
     //xhr.open('GET','http://localhost:3000/api/meetings?organizador='+userId)
-    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.open('GET','http://localhost:3000/api/meetings/user/' + currentUser.email)
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            resultJson = JSON.parse(xhr.response).results
-            let htmlMeetings = `<div style="padding: 30px;padding-top: 80px;" >
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre de Meeting</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Hora</th>
-                        <th scope="col">Importancia</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>`
-            let x = 0;
-            resultJson.forEach(item => {
+            meetings = JSON.parse(xhr.response).results
+            meetings.map(item => {
                 let auxDate
                 let dateDay = 'Sin Definir'
                 let dateTime = 'Sin Definir'
@@ -86,25 +73,50 @@ function detailAllMeeting (userId) {
                     dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
                     dateTime = auxDate.getHours() + ':' + auxDate.getMinutes()
                 }
-                htmlMeetings += `<tr>
-                        <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
-                        <td onclick="clickRow('${item._id}')">${item.name}</td>
-                        <td onclick="clickRow('${item._id}')">${dateDay}</td>
-                        <td onclick="clickRow('${item._id}')">${dateTime}</td>
-                        <td onclick="clickRow('${item._id}')">${item.importance}</td>
-                        <td>`
-                if (currentUser._id === item.organizer._id) {
-                    htmlMeetings += `<i class="fas fa-edit" onclick="editRow('${item._id}')"></i>`
-                }
-                htmlMeetings += `</td></tr>`
-                x++
+                item.dateString = dateDay
+                item.timeString = dateTime
+                return item
             })
-            htmlMeetings += `</tbody>
-                    </table>
-                </div>`
-            document.getElementById("beginMeetings").innerHTML = htmlMeetings
+            drawDetailTable(meetings)
         }
     }
+}
+
+function drawDetailTable (filterMeetings) {
+    let htmlMeetings = `<div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre de Meeting</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Importancia</th>
+                <th scope="col">Organizador</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>`
+    let x = 0;
+    filterMeetings.forEach(item => {
+        htmlMeetings += `<tr>
+                <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
+                <td onclick="clickRow('${item._id}')">${item.name}</td>
+                <td onclick="clickRow('${item._id}')">${item.dateString}</td>
+                <td onclick="clickRow('${item._id}')">${item.timeString}</td>
+                <td onclick="clickRow('${item._id}')">${item.importance}</td>
+                <td onclick="clickRow('${item._id}')">${item.organizer.username}</td>
+                <td>`
+        if (currentUser._id === item.organizer._id) {
+            htmlMeetings += `<i class="fas fa-edit" onclick="editRow('${item._id}')"></i>`
+        }
+        htmlMeetings += `</td></tr>`
+        x++
+    })
+    htmlMeetings += `</tbody>
+            </table>
+        </div>`
+    document.getElementById("beginMeetings").innerHTML = htmlMeetings
 }
 
 function getMeetingDataById (id, type) {
@@ -181,11 +193,19 @@ function drawProposals (type) {
                     </div>`
         } else if (type === 'detail') {
             textHTML += `<div class="col-md-1">
-                            <input type="checkbox" name="${item._id}" value="${item._id}" onchange="checkboxEventHandler('${item}')">
+                            <input type="checkbox" name="${item.date}" value="${item.date}" id="${item.date}" onchange="checkboxEventHandler('${item.date}')" `
+            let found = item.voters.find(function (item) {
+                return item._id === currentUser._id
+            })
+            if (found) {
+                textHTML += `checked` 
+            }
+            textHTML += `>
                     </div>`
         }
         textHTML += `</div>`
     })
+
     document.getElementById("proposalsDivs").innerHTML = textHTML
 }
 
@@ -346,33 +366,55 @@ function addPerson () {
 
 function checkboxEventHandler(proposalVote) {
     inputChk = document.getElementById(proposalVote).checked
+    proposalVote = new Date(proposalVote)
     //currentUser
+    console.log(inputChk)
     if (inputChk) {
         dates.forEach(item => {
-            if (item._id === proposalVote) {
-                item.voters = item.voters.find(function (item) {
+            if (item.date.toLocaleString() === proposalVote.toLocaleString()) {
+                let found = item.voters.find(function (item) {
+                    return item._id === currentUser._id
+                })
+                if (!found) {
+                    item.voters.push(currentUser)
                     item.votes++
-                    return item._id === proposalVote
-                });
+                }
             } 
-            if (!found) {
-                proposal.push(currentUser)
-            }
         })
     } else {
         dates.forEach(item => {
-            if (item._id === proposalVote) {
+            if (item.date.toLocaleString() === proposalVote.toLocaleString()) {
                 item.voters = item.voters.filter(function (item) {
                     // checar si es el usuario o quien
-                    item.votes--
-                    return item._id !== currentUser._id;
+                    if (item._id !== currentUser._id) {
+                        item.votes--
+                        return true
+                    } 
+                    return false
                 });
             }
         })
     }
-
+    updateProposals()
+    console.log(dates)
 }
 
 function updateProposals () {
+    console.log('foo')
+    let resultJson = JSON.stringify({
+        'schedule_proposals': dates
+    })
 
+    let xhr = new XMLHttpRequest()
+    xhr.open('PATCH','http://localhost:3000/api/meeting/' + idMeeting)
+
+    xhr.setRequestHeader('Content-type','application/json')
+    xhr.send(resultJson)
+    
+    xhr.onload = function(){
+        if(xhr.status != 200){
+            alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
+        }else{
+        }
+    }
 }
