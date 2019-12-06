@@ -158,7 +158,14 @@ function drawDetailTable (filterMeetings) {
                 <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
                 <td onclick="clickRow('${item._id}')">${item.name}</td>
                 <td onclick="clickRow('${item._id}')">${item.dateString}</td>
-                <td onclick="clickRow('${item._id}')">${item.timeString}</td>
+                <td onclick="clickRow('${item._id}')">${item.timeString}`
+        auxRepeats = filterMeetings.filter(function (repeat) {
+            return item.dateString === repeat.dateString && item.timeString === repeat.timeString && item.dateString !== 'Sin Definir'
+        })
+        if (auxRepeats.length > 1) {
+            htmlMeetings += `<i class="fas fa-exclamation-triangle" style="color:orange"></i>`
+        }
+        htmlMeetings += `</td>
                 <td onclick="clickRow('${item._id}')">${item.importance}</td>
                 <td onclick="clickRow('${item._id}')">${item.organizer.username}</td>
                 <td>`
@@ -189,6 +196,7 @@ function getMeetingDataById (id, type) {
             if(jsonResult.date) {
                 jsonResult.date = new Date(jsonResult.date)
                 dateResult = jsonResult.date.toLocaleString().split(' ')[0]
+                dateResult = ((jsonResult.date.getMonth()+1) + '/' + jsonResult.date.getDate() + '/' + jsonResult.date.getFullYear())
                 timeResult = jsonResult.date.toLocaleString().split(' ')[1]
             }
             document.getElementById("datepicker").value = dateResult
