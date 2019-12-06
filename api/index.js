@@ -2,7 +2,7 @@
 let config = require('./config/config');
 let mongoose = require('mongoose');
 let app = require('./app');
-let PORT = 3000;
+let PORT = process.env.PORT || 3000;
 
 mongoose.connect(config.DB_URL, {
         useNewUrlParser: true,
