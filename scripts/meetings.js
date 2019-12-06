@@ -4,6 +4,7 @@ let usersnames = []
 let currentUser = JSON.parse(sessionStorage.getItem("user"))
 people.push(currentUser)
 let meeting
+let meetings = []
 let finalDate = ""
 
 function constructMeeting () {
@@ -52,32 +53,18 @@ function createMeeting (e) {
 }
 
 
-function detailAllMeeting (userId) {
+function detailAllMeeting () {
     let xhr = new XMLHttpRequest()
     //xhr.open('GET','http://localhost:3000/api/meetings?organizador='+userId)
-    xhr.open('GET','http://localhost:3000/api/meetings')
+    xhr.open('GET','http://localhost:3000/api/meetings/user/' + currentUser.email)
     xhr.send()
     
     xhr.onload = function(){
         if(xhr.status != 200){
             alert(xhr.status+ ': '+ xhr.statusText + "/n Un error ha ocurrido, por favor inténtelo después.")
         }else{
-            resultJson = JSON.parse(xhr.response).results
-            let htmlMeetings = `<div style="padding: 30px;padding-top: 80px;" >
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre de Meeting</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Hora</th>
-                        <th scope="col">Importancia</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>`
-            let x = 0;
-            resultJson.forEach(item => {
+            meetings = JSON.parse(xhr.response).results
+            meetings.map(item => {
                 let auxDate
                 let dateDay = 'Sin Definir'
                 let dateTime = 'Sin Definir'
@@ -86,25 +73,50 @@ function detailAllMeeting (userId) {
                     dateDay = auxDate.getDate() + '/' + auxDate.getMonth() + '/' + auxDate.getFullYear()
                     dateTime = auxDate.getHours() + ':' + auxDate.getMinutes()
                 }
-                htmlMeetings += `<tr>
-                        <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
-                        <td onclick="clickRow('${item._id}')">${item.name}</td>
-                        <td onclick="clickRow('${item._id}')">${dateDay}</td>
-                        <td onclick="clickRow('${item._id}')">${dateTime}</td>
-                        <td onclick="clickRow('${item._id}')">${item.importance}</td>
-                        <td>`
-                if (currentUser._id === item.organizer._id) {
-                    htmlMeetings += `<i class="fas fa-edit" onclick="editRow('${item._id}')"></i>`
-                }
-                htmlMeetings += `</td></tr>`
-                x++
+                item.dateString = dateDay
+                item.timeString = dateTime
+                return item
             })
-            htmlMeetings += `</tbody>
-                    </table>
-                </div>`
-            document.getElementById("beginMeetings").innerHTML = htmlMeetings
+            drawDetailTable(meetings)
         }
     }
+}
+
+function drawDetailTable (filterMeetings) {
+    let htmlMeetings = `<div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre de Meeting</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Importancia</th>
+                <th scope="col">Organizador</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>`
+    let x = 0;
+    filterMeetings.forEach(item => {
+        htmlMeetings += `<tr>
+                <th onclick="clickRow('${item._id}')" scope="row">${x}</th>
+                <td onclick="clickRow('${item._id}')">${item.name}</td>
+                <td onclick="clickRow('${item._id}')">${item.dateString}</td>
+                <td onclick="clickRow('${item._id}')">${item.timeString}</td>
+                <td onclick="clickRow('${item._id}')">${item.importance}</td>
+                <td onclick="clickRow('${item._id}')">${item.organizer.username}</td>
+                <td>`
+        if (currentUser._id === item.organizer._id) {
+            htmlMeetings += `<i class="fas fa-edit" onclick="editRow('${item._id}')"></i>`
+        }
+        htmlMeetings += `</td></tr>`
+        x++
+    })
+    htmlMeetings += `</tbody>
+            </table>
+        </div>`
+    document.getElementById("beginMeetings").innerHTML = htmlMeetings
 }
 
 function getMeetingDataById (id, type) {
@@ -169,12 +181,7 @@ function drawParticipants (type) {
 
 function drawProposals (type) {
     textHTML = ''
-<<<<<<< HEAD
-    dates.forEach(item => {
-        console.log(item)
-=======
     dates.forEach(item =>{
->>>>>>> develop
         textHTML += `<div class="row">
                     <div class="col-md-3">
                         <i class="fas fa-calendar-day"></i>
