@@ -49,7 +49,7 @@ function getMeetings(req,res){
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(meetings).length === 0){
-                res.status(404).send({message: 'No meetings found.'});
+                res.status(200).send({message: 'No meetings found.', lengthRes: 0, results : []});
             }else{
                 let temp = meetings; 
                 let len = meetings.length;
@@ -75,7 +75,7 @@ function getMeetingsByUserId(req,res){
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(meetings).length === 0){
-                res.status(404).send({message: 'No meetings found.'});
+                res.status(200).send({message: 'No meetings found.', lengthRes: 0, results: []});
             }else{
                 let temp = meetings; 
                 let len = meetings.length;
@@ -103,9 +103,9 @@ function getMeetingById(req,res){
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(proposal).length === 0){
-                res.status(404).send({message: 'Meeting not found.'});
+                res.status(200).send({message: 'Meeting not found.', result: []});
             }else{
-                res.status(200).send({message:'Meeting obtained', result : proposal});
+                res.status(200).send({message:'Meeting obtained', result: proposal});
             }
         }
     });
@@ -133,7 +133,7 @@ function getMeetingsByUser(req,res){
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(meetings).length === 0){
-                res.status(404).send({message: 'User has no meetings.'});
+                res.status(200).send({message: 'User has no meetings.', lengthRes: 0, results : []});
             }else{
                 for(let i in meetings) {
                     if(meetings[i].organizer.email == email) {
@@ -172,7 +172,7 @@ function getMeetingsByMonthAndUser(req,res){
             res.status(500).send({message: 'Server error.'});
         }else{
             if(Object.entries(meetings).length === 0){
-                res.status(404).send({message: 'User has no meetings.'});
+                res.status(200).send({message: 'User has no meetings.', lengthRes: 0, results : []});
             } else {
                 let monthMeetings = meetings.filter((item) => {return item.date != null});
                 let final = monthMeetings.filter((item) => {
